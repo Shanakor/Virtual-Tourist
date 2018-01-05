@@ -14,7 +14,9 @@ class TravelLocationsMapViewController: UIViewController {
     // MARK: IBOutlets
     
     @IBOutlet weak var mapView: MKMapView!
-    
+
+    // MARK: Properties
+    private var coreDataStack: CoreDataStack!
 
     // MARK: Life Cycle
 
@@ -22,6 +24,8 @@ class TravelLocationsMapViewController: UIViewController {
         super.viewDidLoad()
 
         initMapView()
+
+        coreDataStack = (UIApplication.shared.delegate as! AppDelegate).coreDataStack
     }
 
     private func initMapView() {
@@ -87,8 +91,24 @@ class TravelLocationsMapViewController: UIViewController {
         let touchPoint = gestureRecognizer.location(in: self.mapView)
         let touchMapCoordinate = self.mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
 
+        addPointAnnotationToMapViewAt(coordinate: touchMapCoordinate)
+        persistTravelLocation(coordinate: touchMapCoordinate)
+    }
+
+    private func persistTravelLocation(coordinate: CLLocationCoordinate2D) {
+        let travelLocation = TravelLocation(latitude: coordinate.latitude, longitude: coordinate.longitude, context: coreDataStack.context)
+
+        do{
+            try coreDataStack.saveContext()
+        }
+        catch{
+            print("Unable to persist TravelLocation:\n\(travelLocation)")
+        }
+    }
+
+    private func addPointAnnotationToMapViewAt(coordinate: CLLocationCoordinate2D) {
         let pointAnnotation = MKPointAnnotation()
-        pointAnnotation.coordinate = touchMapCoordinate
+        pointAnnotation.coordinate = coordinate
 
         if !self.mapView.annotations.contains(where:
             {other in
