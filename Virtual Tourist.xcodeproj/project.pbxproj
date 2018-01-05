@@ -8,20 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		198BB2351FFE74EA004A5722 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198BB2341FFE74EA004A5722 /* AppDelegate.swift */; };
-		198BB2371FFE74EA004A5722 /* TravelLocationsMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198BB2361FFE74EA004A5722 /* TravelLocationsMapViewController.swift */; };
-		198BB23A1FFE74EA004A5722 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 198BB2381FFE74EA004A5722 /* Main.storyboard */; };
 		198BB23C1FFE74EA004A5722 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 198BB23B1FFE74EA004A5722 /* Assets.xcassets */; };
-		198BB23F1FFE74EA004A5722 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 198BB23D1FFE74EA004A5722 /* LaunchScreen.storyboard */; };
+		3C9DE2D1D97518B27B5EEAFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C9DEFABBF3A9957507BBEBD /* Main.storyboard */; };
+		3C9DE6C1AFC686E85041E386 /* TravelLocationsMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE14621A3586EAE7F7305 /* TravelLocationsMapViewController.swift */; };
+		3C9DE89E8995BEF908F52E74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C9DE52E7D86D4AC23AAB025 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		198BB2311FFE74EA004A5722 /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		198BB2341FFE74EA004A5722 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		198BB2361FFE74EA004A5722 /* TravelLocationsMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelLocationsMapViewController.swift; sourceTree = "<group>"; };
-		198BB2391FFE74EA004A5722 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		198BB23B1FFE74EA004A5722 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		198BB23E1FFE74EA004A5722 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		198BB2401FFE74EA004A5722 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C9DE14621A3586EAE7F7305 /* TravelLocationsMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelLocationsMapViewController.swift; sourceTree = "<group>"; };
+		3C9DE3CB51415ACD82D332C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Virtual Tourist/Base.lproj/LaunchScreen.storyboard"; sourceTree = SOURCE_ROOT; };
+		3C9DEF6953B9A6875955017D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Virtual Tourist/Base.lproj/Main.storyboard"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,13 +55,29 @@
 			isa = PBXGroup;
 			children = (
 				198BB2341FFE74EA004A5722 /* AppDelegate.swift */,
-				198BB2361FFE74EA004A5722 /* TravelLocationsMapViewController.swift */,
-				198BB2381FFE74EA004A5722 /* Main.storyboard */,
 				198BB23B1FFE74EA004A5722 /* Assets.xcassets */,
-				198BB23D1FFE74EA004A5722 /* LaunchScreen.storyboard */,
 				198BB2401FFE74EA004A5722 /* Info.plist */,
+				3C9DE89F2A7A2A847E1F1AB4 /* Storyboards */,
+				3C9DEBB076450AEA7115D592 /* ViewControllers */,
 			);
 			path = "Virtual Tourist";
+			sourceTree = "<group>";
+		};
+		3C9DE89F2A7A2A847E1F1AB4 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				3C9DE52E7D86D4AC23AAB025 /* LaunchScreen.storyboard */,
+				3C9DEFABBF3A9957507BBEBD /* Main.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		3C9DEBB076450AEA7115D592 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				3C9DE14621A3586EAE7F7305 /* TravelLocationsMapViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -123,9 +139,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				198BB23F1FFE74EA004A5722 /* LaunchScreen.storyboard in Resources */,
 				198BB23C1FFE74EA004A5722 /* Assets.xcassets in Resources */,
-				198BB23A1FFE74EA004A5722 /* Main.storyboard in Resources */,
+				3C9DE89E8995BEF908F52E74 /* LaunchScreen.storyboard in Resources */,
+				3C9DE2D1D97518B27B5EEAFC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,28 +152,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				198BB2371FFE74EA004A5722 /* TravelLocationsMapViewController.swift in Sources */,
 				198BB2351FFE74EA004A5722 /* AppDelegate.swift in Sources */,
+				3C9DE6C1AFC686E85041E386 /* TravelLocationsMapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		198BB2381FFE74EA004A5722 /* Main.storyboard */ = {
+		3C9DE52E7D86D4AC23AAB025 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				198BB2391FFE74EA004A5722 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		198BB23D1FFE74EA004A5722 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				198BB23E1FFE74EA004A5722 /* Base */,
+				3C9DE3CB51415ACD82D332C0 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		3C9DEFABBF3A9957507BBEBD /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C9DEF6953B9A6875955017D /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
