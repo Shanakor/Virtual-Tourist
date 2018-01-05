@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -49,7 +50,65 @@
                     <view key="view" contentMode="scaleToFill" id="K70-dI-IfL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cEr-6z-8WF">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="TuT-67-7Fi"/>
+                                    <barButtonItem title="New Collection" width="42" style="plain" id="6gZ-gi-6hr"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ojh-DE-RhT"/>
+                                </items>
+                            </toolbar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5br-f3-ZU2">
+                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <subviews>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="3i6-L1-a33">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
+                                    </mapView>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="W5J-qZ-Jvu">
+                                        <rect key="frame" x="0.0" y="140" width="375" height="419"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="7rs-in-y8r">
+                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="TWv-aC-RbT">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="W5J-qZ-Jvu" secondAttribute="trailing" id="0yZ-pB-k53"/>
+                                    <constraint firstItem="3i6-L1-a33" firstAttribute="leading" secondItem="5br-f3-ZU2" secondAttribute="leading" id="23U-S9-Pjm"/>
+                                    <constraint firstItem="3i6-L1-a33" firstAttribute="height" secondItem="5br-f3-ZU2" secondAttribute="height" multiplier="0.25" id="VCY-CT-130"/>
+                                    <constraint firstAttribute="trailing" secondItem="3i6-L1-a33" secondAttribute="trailing" id="aKM-o2-p7B"/>
+                                    <constraint firstItem="W5J-qZ-Jvu" firstAttribute="top" secondItem="3i6-L1-a33" secondAttribute="bottom" id="cQd-0b-NfF"/>
+                                    <constraint firstItem="3i6-L1-a33" firstAttribute="top" secondItem="5br-f3-ZU2" secondAttribute="top" id="fx4-XN-cOd"/>
+                                    <constraint firstItem="W5J-qZ-Jvu" firstAttribute="leading" secondItem="5br-f3-ZU2" secondAttribute="leading" id="mAj-AT-Tlw"/>
+                                    <constraint firstAttribute="bottom" secondItem="W5J-qZ-Jvu" secondAttribute="bottom" id="qJv-Z0-G7l"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="iNf-IA-hNU" firstAttribute="bottom" secondItem="cEr-6z-8WF" secondAttribute="bottom" id="7Bv-cs-rn2"/>
+                            <constraint firstAttribute="trailing" secondItem="cEr-6z-8WF" secondAttribute="trailing" id="DhS-Ml-4zj"/>
+                            <constraint firstItem="5br-f3-ZU2" firstAttribute="leading" secondItem="iNf-IA-hNU" secondAttribute="leading" id="GQ2-ix-MfS"/>
+                            <constraint firstItem="iNf-IA-hNU" firstAttribute="trailing" secondItem="5br-f3-ZU2" secondAttribute="trailing" id="HHU-KW-5GX"/>
+                            <constraint firstItem="cEr-6z-8WF" firstAttribute="leading" secondItem="iNf-IA-hNU" secondAttribute="leading" id="L5X-HE-KfL"/>
+                            <constraint firstItem="5br-f3-ZU2" firstAttribute="top" secondItem="iNf-IA-hNU" secondAttribute="top" id="gSc-YH-X1u"/>
+                            <constraint firstItem="cEr-6z-8WF" firstAttribute="top" secondItem="5br-f3-ZU2" secondAttribute="bottom" id="lpw-JH-Nss"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="iNf-IA-hNU"/>
                     </view>
                     <navigationItem key="navigationItem" id="7Dh-xU-e5u"/>
