@@ -31,7 +31,14 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        FlickrAPIClient.shared.getPhotoAlbumInformation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude,
-                completionHandler: {_, _ in })
+        let transientTravelLocation = TransientTravelLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
+
+        FlickrAPIClient.shared.getPhotoAlbumMetadata(travelLocation: transientTravelLocation,
+                photoAlbum: nil){
+            transientPhotoAlbum, transientPhotos, error in
+
+            print("PhotoAlbum: \(transientPhotoAlbum)")
+            print("Photos: \(transientPhotos)")
+        }
     }
 }

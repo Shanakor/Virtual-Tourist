@@ -18,53 +18,25 @@ class TravelLocationsMapViewController: UIViewController {
 
     // MARK: Properties
 
-    private var coreDataStack: CoreDataStack!
-    private var travelLocationFetchRequest: NSFetchRequest<NSManagedObject>!
+    private var tlPersistenceController = TravelLocationPersistenceController.shared
 
     // MARK: Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        initCoreData()
         initMapView()
     }
 
-    private func initCoreData() {
-        coreDataStack = (UIApplication.shared.delegate as! AppDelegate).coreDataStack
-        travelLocationFetchRequest = NSFetchRequest<NSManagedObject>(entityName: TravelLocation.entityName)
-    }
-
     private func initMapView() {
-        let gestureRecognizer = initLongPressGestureRecognizer()
-        let annotations = fetchPersistedPointAnnotations()
-
         mapView.delegate = self
+
+        let gestureRecognizer = initLongPressGestureRecognizer()
         mapView.addGestureRecognizer(gestureRecognizer)
+
+        let travelLocations = tlPersistenceController.fetchAllTravelLocations()
+        let annotations = TravelLocation.convertArrayToMKPointAnnotations(travelLocations)
         mapView.addAnnotations(annotations)
-    }
-
-    private func fetchPersistedPointAnnotations() -> [MKPointAnnotation] {
-        var annotations = [MKPointAnnotation]()
-
-        do {
-            let fetchedObjects = try coreDataStack.context.fetch(travelLocationFetchRequest)
-
-            if fetchedObjects.count > 0 {
-                for obj in fetchedObjects {
-                    let travelLocation = obj as! TravelLocation
-
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = CLLocationCoordinate2D(latitude: travelLocation.latitude, longitude: travelLocation.longitude)
-                    annotations.append(annotation)
-                }
-            }
-        }
-        catch {
-            print("Unable to fetch TravelLocations!")
-        }
-
-        return annotations
     }
 
     private func initLongPressGestureRecognizer() -> UILongPressGestureRecognizer {
@@ -138,14 +110,7 @@ class TravelLocationsMapViewController: UIViewController {
     }
 
     private func persistTravelLocation(coordinate: CLLocationCoordinate2D) {
-        let travelLocation = TravelLocation(latitude: coordinate.latitude, longitude: coordinate.longitude, context: coreDataStack.context)
-
-        do{
-            try coreDataStack.saveContext()
-        }
-        catch{
-            print("Unable to persist TravelLocation:\n\(travelLocation)")
-        }
+        tlPersistenceController.persistTravelLocation(lat: coordinate.latitude, lon: coordinate.longitude)
     }
 
     private func addPointAnnotationToMapViewAt(coordinate: CLLocationCoordinate2D) {
@@ -172,7 +137,8 @@ class TravelLocationsMapViewController: UIViewController {
             if identifier == AppDelegate.SegueIdentifiers.PhotoAlbum{
                 let destCtrl = segue.destination as! PhotoAlbumViewController
 
-                destCtrl.annotation = mapView.selectedAnnotations[0]
+                let selectedAnnotation = mapView.selectedAnnotations[0]
+                destCtrl.annotation = selectedAnnotation
             }
         }
     }

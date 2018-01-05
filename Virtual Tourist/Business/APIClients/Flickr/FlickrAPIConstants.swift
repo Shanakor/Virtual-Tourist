@@ -46,6 +46,7 @@ extension FlickrAPIClient {
         static let Title = "title"
         static let MediumURL = "url_m"
         static let Pages = "pages"
+        static let Page = "page"
         static let Total = "total"
     }
 

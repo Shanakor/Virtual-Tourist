@@ -40,10 +40,8 @@ class FlickrAPIClient: APIClient {
 
     // MARK: Convenience methods
 
-    func getPhotoAlbumInformation(photoAlbum: PhotoAlbum,  page: Int = 1, completionHandler: @escaping ([AnyObject]?, APIClientError?) -> Void){
-        guard let travelLocation = photoAlbum.travelLocation else{
-            fatalError("The passed photoAlbum has to be assigned to a travel location!")
-        }
+    func getPhotoAlbumMetadata(travelLocation: TransientTravelLocation, photoAlbum: TransientPhotoAlbum?,
+                               completionHandler: @escaping (TransientPhotoAlbum?, [TransientPhoto]?, APIClientError?) -> Void){
 
         // Construct method parameters.
         let methodParameters = [
@@ -54,7 +52,7 @@ class FlickrAPIClient: APIClient {
             QueryKeys.Format: QueryValues.ResponseFormat,
             QueryKeys.NoJSONCallback: QueryValues.DisableJSONCallback,
             QueryKeys.PerPage: QueryValues.PerPage,
-            QueryKeys.Page: String(page),
+            QueryKeys.Page: photoAlbum == nil ? "1" : String(photoAlbum!.page),
             QueryKeys.BoundingBox: createBBoxString(lat: travelLocation.latitude, lon: travelLocation.longitude)
         ]
 
@@ -63,29 +61,95 @@ class FlickrAPIClient: APIClient {
             (result, error) in
 
             guard error == nil else{
-                completionHandler(nil, error)
+                completionHandler(nil, nil, error)
                 return
             }
 
-            photoAlbum = parsePhotoAlbumInformation(result!, photoAlbum: photoAlbum)
+            guard let stat = result![ResponseKeys.Status] else{
+                completionHandler(nil, nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.Status)' in \(result!)"))
+                return
+            }
+
+            guard let statString = stat as? String, statString == JSONValues.OKStatus else {
+                completionHandler(nil, nil, APIClientError.serverError(description: "The server returned a non-ok status!"))
+                return
+            }
+
+            guard let photosDictionary = result![ResponseKeys.Photos] as? [String: AnyObject] else{
+                completionHandler(nil, nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.Photos)' in \(result!)"))
+                return
+            }
+
+            var photoAlbum: TransientPhotoAlbum!
+            self.parsePhotoAlbumMetadata(photosDictionary){
+                album, error in
+
+                guard error == nil else{
+                    completionHandler(nil, nil, error)
+                    return
+                }
+
+                photoAlbum = album
+            }
+
+            var photos: [TransientPhoto]!
+            self.parsePhotoMetadata(photosDictionary){
+                photosResult, error in
+
+                guard error == nil else{
+                    completionHandler(photoAlbum!, nil, error)
+                    return
+                }
+
+                photos = photosResult
+            }
             
-            completionHandler(result!, error)
+            completionHandler(photoAlbum, photos, nil)
         }
     }
 
-//    private func parseImageURLs(_ imagesDictionary: [String: AnyObject], completionHandler: @escaping ([URL]?, APIClientError?) -> Void){
-//        let urls = [URL]()
-//
-//        guard let stat = imagesDictionary[ResponseKeys.Status],
-//              let statString = stat as? String,
-//              statString == JSONValues.OKStatus else {
-//
-//            completionHandler(nil, APIClientError.serverError(description: "The server returned a non-ok status!"))
-//            return
-//        }
-//    }
+    private func parsePhotoMetadata(_ photosDictionary: [String: AnyObject], completionHandler: ([TransientPhoto]?, APIClientError?) -> Void){
+        var photos = [TransientPhoto]()
 
-    private func parsePhotoAlbumInformation(_ dictionary: [String: AnyObject], photoAlbum: PhotoAlbum) -> PhotoAlbum {
+        guard let photoArray = photosDictionary[ResponseKeys.Photo] as? [[String: AnyObject]] else{
+            completionHandler(nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.Photo)' in \(photosDictionary)"))
+            return
+        }
+
+        for (i, photoMetadata) in photoArray.enumerated(){
+            guard let url = photoMetadata[ResponseKeys.MediumURL] as? String else{
+                completionHandler(nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.MediumURL)' in \(photoMetadata) at index \(i)"))
+                return
+            }
+
+            photos.append(TransientPhoto(url: url))
+        }
+
+        completionHandler(photos, nil)
+    }
+
+    private func parsePhotoAlbumMetadata(_ photosDictionary: [String: AnyObject], completionHandler: (TransientPhotoAlbum?, APIClientError?) -> Void){
+        guard let page = photosDictionary[ResponseKeys.Page] else{
+            completionHandler(nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.Page)' in \(photosDictionary)"))
+            return
+        }
+
+        guard let pageValue = page as? Int else{
+            completionHandler(nil, APIClientError.parseError(description: "Could not convert \(page) to Integer"))
+            return
+        }
+
+        guard let pages = photosDictionary[ResponseKeys.Pages] else{
+            completionHandler(nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.Pages)' in \(photosDictionary)"))
+            return
+        }
+
+        guard let pagesValue = page as? Int else{
+            completionHandler(nil, APIClientError.parseError(description: "Could not convert \(pages) to Integer"))
+            return
+        }
+
+        completionHandler(TransientPhotoAlbum(page: pageValue, pageCount: pagesValue), nil)
     }
 
     private func createBBoxString(lat: Double, lon: Double) -> String {
