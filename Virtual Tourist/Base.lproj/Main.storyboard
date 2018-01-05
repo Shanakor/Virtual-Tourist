@@ -43,10 +43,10 @@
             </objects>
             <point key="canvasLocation" x="826" y="33"/>
         </scene>
-        <!--View Controller-->
+        <!--Photo Album View Controller-->
         <scene sceneID="Jjc-Wt-iHj">
             <objects>
-                <viewController id="oWF-aF-vL0" sceneMemberID="viewController">
+                <viewController id="oWF-aF-vL0" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="K70-dI-IfL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -62,7 +62,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5br-f3-ZU2">
                                 <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                                 <subviews>
-                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="3i6-L1-a33">
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" showsCompass="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3i6-L1-a33">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
                                     </mapView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="W5J-qZ-Jvu">
@@ -112,6 +112,9 @@
                         <viewLayoutGuide key="safeArea" id="iNf-IA-hNU"/>
                     </view>
                     <navigationItem key="navigationItem" id="7Dh-xU-e5u"/>
+                    <connections>
+                        <outlet property="mapView" destination="3i6-L1-a33" id="3tE-NL-so9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LN2-JK-rXu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -166,6 +166,16 @@ class TravelLocationsMapViewController: UIViewController {
     fileprivate func showPhotoAlbumScene(){
         performSegue(withIdentifier: AppDelegate.SegueIdentifiers.PhotoAlbum, sender: nil)
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier{
+            if identifier == AppDelegate.SegueIdentifiers.PhotoAlbum{
+                let destCtrl = segue.destination as! PhotoAlbumViewController
+
+                destCtrl.annotation = mapView.selectedAnnotations[0]
+            }
+        }
+    }
 }
 
 // MARK: MKMapView delegate
