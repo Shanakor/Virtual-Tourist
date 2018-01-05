@@ -27,4 +27,11 @@ class PhotoAlbumViewController: UIViewController {
         mapView.addAnnotation(annotation)
         mapView.showAnnotations([annotation], animated: false)
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        FlickrAPIClient.shared.getPhotoAlbumInformation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude,
+                completionHandler: {_, _ in })
+    }
 }

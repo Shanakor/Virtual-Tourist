@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: Properties
 
-    let coreDataStack = CoreDataStack(modelName: "Model v1")!
+    let coreDataStack = CoreDataStack(modelName: "Model")!
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
