@@ -13,6 +13,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    struct UserDefaultsConstants{
+
+        struct MapRegion{
+            static let CenterLatitude = "mapRegionCenterLatitude"
+            static let CenterLongitude = "mapRegionCenterLongitude"
+            static let SpanLatitudeDelta = "mapRegionSpanLatitudeDelta"
+            static let SpanLongitudeDelta = "mapRegionSpanLongitudeDelta"
+        }
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
