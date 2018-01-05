@@ -21,7 +21,21 @@ class TravelLocationsMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        initMapView()
+    }
+
+    private func initMapView() {
+        let gestureRecognizer = initLongPressGestureRecognizer()
+
         mapView.delegate = self
+        mapView.addGestureRecognizer(gestureRecognizer)
+    }
+
+    private func initLongPressGestureRecognizer() -> UILongPressGestureRecognizer {
+        let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        recognizer.minimumPressDuration = 0.5
+
+        return recognizer
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +74,28 @@ class TravelLocationsMapViewController: UIViewController {
                     span: MKCoordinateSpan(latitudeDelta: spanLatitudeDeltaValue, longitudeDelta: spanLongitudeDeltaValue))
 
             mapView.setRegion(region, animated: false)
+        }
+    }
+
+    // MARK: Gesture Recognizers
+
+    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer){
+        if gestureRecognizer.state != .began{
+            return
+        }
+
+        let touchPoint = gestureRecognizer.location(in: self.mapView)
+        let touchMapCoordinate = self.mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
+
+        let pointAnnotation = MKPointAnnotation()
+        pointAnnotation.coordinate = touchMapCoordinate
+
+        if !self.mapView.annotations.contains(where:
+            {other in
+                pointAnnotation.coordinate.latitude == other.coordinate.latitude &&
+                pointAnnotation.coordinate.longitude == other.coordinate.longitude
+        }){
+            self.mapView.addAnnotation(pointAnnotation)
         }
     }
 }
