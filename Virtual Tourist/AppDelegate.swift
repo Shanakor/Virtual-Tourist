@@ -23,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    struct SegueIdentifiers{
+        static let PhotoAlbum = "ShowPhotoAlbumScene"
+    }
+
     // MARK: Properties
 
     let coreDataStack = CoreDataStack(modelName: "Model v1")!

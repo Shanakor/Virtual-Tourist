@@ -78,6 +78,9 @@ class TravelLocationsMapViewController: UIViewController {
         super.viewWillAppear(animated)
 
         restoreMapRegion()
+
+        // Hide navigation bar on first UIViewController.
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     private func restoreMapRegion() {
@@ -111,6 +114,13 @@ class TravelLocationsMapViewController: UIViewController {
 
             mapView.setRegion(region, animated: false)
         }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // Show navigation bar for other UIViewControllers.
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     // MARK: Gesture Recognizers
@@ -150,6 +160,12 @@ class TravelLocationsMapViewController: UIViewController {
             self.mapView.addAnnotation(pointAnnotation)
         }
     }
+
+    // MARK: Navigation
+
+    fileprivate func showPhotoAlbumScene(){
+        performSegue(withIdentifier: AppDelegate.SegueIdentifiers.PhotoAlbum, sender: nil)
+    }
 }
 
 // MARK: MKMapView delegate
@@ -164,6 +180,10 @@ extension TravelLocationsMapViewController: MKMapViewDelegate{
         UserDefaults.standard.set(region.center.longitude, forKey: AppDelegate.UserDefaultsConstants.MapRegion.CenterLongitude)
         UserDefaults.standard.set(region.span.latitudeDelta, forKey: AppDelegate.UserDefaultsConstants.MapRegion.SpanLatitudeDelta)
         UserDefaults.standard.set(region.span.longitudeDelta, forKey: AppDelegate.UserDefaultsConstants.MapRegion.SpanLongitudeDelta)
+    }
+
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        showPhotoAlbumScene()
     }
 }
 
