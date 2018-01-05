@@ -12,6 +12,7 @@ import CoreData
 
 
 public class TravelLocation: NSManagedObject {
+    static let entityName = "TravelLocation"
 
     convenience init(latitude: Double, longitude: Double, context: NSManagedObjectContext) {
         let entityName = "TravelLocation"

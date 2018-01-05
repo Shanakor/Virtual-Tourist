@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class TravelLocationsMapViewController: UIViewController {
 
@@ -16,23 +17,54 @@ class TravelLocationsMapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
 
     // MARK: Properties
+
     private var coreDataStack: CoreDataStack!
+    private var travelLocationFetchRequest: NSFetchRequest<NSManagedObject>!
 
     // MARK: Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        initCoreData()
         initMapView()
+    }
 
+    private func initCoreData() {
         coreDataStack = (UIApplication.shared.delegate as! AppDelegate).coreDataStack
+        travelLocationFetchRequest = NSFetchRequest<NSManagedObject>(entityName: TravelLocation.entityName)
     }
 
     private func initMapView() {
         let gestureRecognizer = initLongPressGestureRecognizer()
+        let annotations = fetchPersistedPointAnnotations()
 
         mapView.delegate = self
         mapView.addGestureRecognizer(gestureRecognizer)
+        mapView.addAnnotations(annotations)
+    }
+
+    private func fetchPersistedPointAnnotations() -> [MKPointAnnotation] {
+        var annotations = [MKPointAnnotation]()
+
+        do {
+            let fetchedObjects = try coreDataStack.context.fetch(travelLocationFetchRequest)
+
+            if fetchedObjects.count > 0 {
+                for obj in fetchedObjects {
+                    let travelLocation = obj as! TravelLocation
+
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = CLLocationCoordinate2D(latitude: travelLocation.latitude, longitude: travelLocation.longitude)
+                    annotations.append(annotation)
+                }
+            }
+        }
+        catch {
+            print("Unable to fetch TravelLocations!")
+        }
+
+        return annotations
     }
 
     private func initLongPressGestureRecognizer() -> UILongPressGestureRecognizer {
