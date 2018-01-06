@@ -177,7 +177,7 @@ class FlickrAPIClient: APIClient {
     func downloadPhotoData(_ transientPhotos: [TransientPhoto], progressHandler: @escaping (TransientPhoto, APIClientError?) -> Void,
                            completionHandler: @escaping (APIClientError?) -> Void){
 
-        for photo in transientPhotos{
+        for (i, photo) in transientPhotos.enumerated(){
 
             guard let url = URL(string: photo.url) else{
                 progressHandler(photo, .parseError(description: "The url '\(photo.url)' was invalid!"))
@@ -193,6 +193,10 @@ class FlickrAPIClient: APIClient {
                 }
 
                 progressHandler(TransientPhoto(url: photo.url, imageData: data), nil)
+
+                if i == transientPhotos.count - 1{
+                    completionHandler(nil)
+                }
             }
         }
     }

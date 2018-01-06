@@ -130,6 +130,7 @@
                         <outlet property="collectionView" destination="W5J-qZ-Jvu" id="Pzc-86-AGb"/>
                         <outlet property="flowLayout" destination="7rs-in-y8r" id="CCX-Zi-9s8"/>
                         <outlet property="mapView" destination="3i6-L1-a33" id="3tE-NL-so9"/>
+                        <outlet property="newCollectionButton" destination="6gZ-gi-6hr" id="RZX-9G-UIL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LN2-JK-rXu" userLabel="First Responder" sceneMemberID="firstResponder"/>

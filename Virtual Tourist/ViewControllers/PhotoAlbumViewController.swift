@@ -16,7 +16,8 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
-
+    @IBOutlet weak var newCollectionButton: UIBarButtonItem!
+    
     // MARK: Constants
 
     fileprivate struct Identifiers{
@@ -67,13 +68,19 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        loadPhotoAlbum()
+        configureUI(enabled: false)
+
+        loadPhotoAlbum(){
+            DispatchQueue.main.async {
+                self.configureUI(enabled: true)
+            }
+        }
     }
 
     // MARK: Network Requests
     // TODO: Replace print(error) everywhere with UIAlertDialogs.
 
-    private func loadPhotoAlbum() {
+    private func loadPhotoAlbum(completionHandler: @escaping () -> Void) {
 
         // PhotoAlbum metadata.
 
@@ -91,11 +98,13 @@ class PhotoAlbumViewController: UIViewController {
             self.transientPhotoAlbum = transientPhotoAlbum
             self.transientPhotos = transientPhotos
 
-            self.loadPhotoData()
+            self.loadPhotoData(){
+                completionHandler()
+            }
         }
     }
 
-    private func loadPhotoData() {
+    private func loadPhotoData(completionHandler: @escaping () -> Void) {
 
         FlickrAPIClient.shared.downloadPhotoData(self.transientPhotos!,
                 progressHandler: {
@@ -113,7 +122,24 @@ class PhotoAlbumViewController: UIViewController {
                         self.photos.append(photo)
                     }
                 },
-                completionHandler: {error in if error != nil {print(error!)}})
+                completionHandler: {
+                    error in
+
+                    if error != nil {
+                        print(error!)
+                    }
+
+                    completionHandler()
+                })
+    }
+}
+
+// MARK: UI helper methods
+
+extension PhotoAlbumViewController{
+
+    fileprivate func configureUI(enabled: Bool){
+        newCollectionButton.isEnabled = enabled
     }
 }
 
