@@ -179,8 +179,8 @@ class FlickrAPIClient: APIClient {
 
         for (i, photo) in transientPhotos.enumerated(){
 
-            guard let url = URL(string: photo.url!) else{
-                progressHandler(photo, .parseError(description: "The url '\(photo.url!)' was invalid!"))
+            guard let url = URL(string: photo.url) else{
+                progressHandler(photo, .parseError(description: "The url '\(photo.url)' was invalid!"))
                 continue
             }
 

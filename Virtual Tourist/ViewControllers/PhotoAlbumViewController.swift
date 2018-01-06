@@ -55,16 +55,16 @@ class PhotoAlbumViewController: UIViewController {
     }
 
     private func initTransientProperties() {
-        transTravelLocation = TransientTravelLocation(latitude: travelLocation.latitude, longitude: travelLocation.longitude)
+        transTravelLocation = TransientPersistentConversionBridge.toTransientTravelLocation(travelLocation)
 
         guard let photoAlbum = travelLocation.photoAlbum else{
             return
         }
 
-        transPhotoAlbum = TransientPhotoAlbum(page: photoAlbum.page, pageCount: photoAlbum.pageCount)
+        transPhotoAlbum = TransientPersistentConversionBridge.toTransientPhotoAlbum(photoAlbum)
 
         if let photos = photoAlbum.photos{
-            transPhotos = Photo.convertArrayToTransient(photos.allObjects as! [Photo])
+            transPhotos = TransientPersistentConversionBridge.toTransientPhotos(photos.allObjects as! [Photo])
         }
     }
 
@@ -113,12 +113,12 @@ class PhotoAlbumViewController: UIViewController {
             persistenceCtrl.context.delete(photoAlbum)
         }
 
-        let photoAlbum = PhotoAlbum(page: transPhotoAlbum.page, pageCount: transPhotoAlbum.pageCount!, context: persistenceCtrl.context)
+        let photoAlbum = TransientPersistentConversionBridge.toPhotoAlbum(transPhotoAlbum, context: persistenceCtrl.context)
         photoAlbum.travelLocation = travelLocation
 
         var photos = [Photo]()
         for transPhoto in transPhotos{
-            let photo = Photo(url: transPhoto.url!, imageData: transPhoto.imageData, context: persistenceCtrl.context)
+            let photo = TransientPersistentConversionBridge.toPhoto(transPhoto, context: persistenceCtrl.context)
             photo.photoAlbum = photoAlbum
             photos.append(photo)
         }
