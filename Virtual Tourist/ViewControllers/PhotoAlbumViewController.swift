@@ -24,8 +24,8 @@ class PhotoAlbumViewController: UIViewController {
     var transientPhotos: [TransientPhoto]?
 
     var photos = [Photo](){
-        didSet{
-            print(photos)
+        didSet {
+            displayPhotoInCollectionView(photo: photos[photos.endIndex - 1])
         }
     }
 
@@ -44,6 +44,7 @@ class PhotoAlbumViewController: UIViewController {
         loadPhotoAlbum()
     }
 
+    // MARK: Network Requests
     // TODO: Replace print(error) everywhere with UIAlertDialogs.
 
     private func loadPhotoAlbum() {
@@ -85,5 +86,11 @@ class PhotoAlbumViewController: UIViewController {
                     self.photos.append(photo)
                 },
                 completionHandler: {error in if error != nil {print(error!)}})
+    }
+
+    // MARK: UI helper methods
+
+    private func displayPhotoInCollectionView(photo: Photo){
+
     }
 }
