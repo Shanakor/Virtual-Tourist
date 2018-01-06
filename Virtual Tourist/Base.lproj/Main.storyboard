@@ -186,15 +186,17 @@
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ybO-rc-wYi">
-                                                    <rect key="frame" x="15" y="15" width="20" height="20"/>
-                                                </activityIndicatorView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="iQE-1h-Opp">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" white="0.95159135262171424" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="ybO-rc-wYi" firstAttribute="centerX" secondItem="9Td-Qj-wGd" secondAttribute="centerX" id="0Ke-7z-5GC"/>
-                                            <constraint firstItem="ybO-rc-wYi" firstAttribute="centerY" secondItem="9Td-Qj-wGd" secondAttribute="centerY" id="rvE-gQ-CAg"/>
+                                            <constraint firstAttribute="trailing" secondItem="iQE-1h-Opp" secondAttribute="trailing" id="4mJ-FS-Gip"/>
+                                            <constraint firstItem="iQE-1h-Opp" firstAttribute="top" secondItem="9Td-Qj-wGd" secondAttribute="top" id="9dN-BT-BYz"/>
+                                            <constraint firstAttribute="bottom" secondItem="iQE-1h-Opp" secondAttribute="bottom" id="EJq-w5-p94"/>
+                                            <constraint firstItem="iQE-1h-Opp" firstAttribute="leading" secondItem="9Td-Qj-wGd" secondAttribute="leading" id="dnm-f6-TPm"/>
                                         </constraints>
                                     </collectionViewCell>
                                 </cells>
@@ -244,4 +246,7 @@
             <point key="canvasLocation" x="2350" y="370"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Placeholder" width="256" height="256"/>
+    </resources>
 </document>
