@@ -36,7 +36,7 @@ extension FlickrAPIClient {
         static let DisableJSONCallback = "1" /* 1 means "yes" */
         static let MediumURL = "url_m"
         static let UseSafeSearch = "1"
-        static let PerPage = "15"
+        static let PerPage = "20"
     }
 
     struct ResponseKeys {
