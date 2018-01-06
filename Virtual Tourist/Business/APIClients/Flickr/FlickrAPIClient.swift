@@ -144,7 +144,7 @@ class FlickrAPIClient: APIClient {
             return
         }
 
-        guard let pagesValue = page as? Int else{
+        guard let pagesValue = pages as? Int else{
             completionHandler(nil, APIClientError.parseError(description: "Could not convert \(pages) to Integer"))
             return
         }
