@@ -25,9 +25,8 @@
 		3C9DE89E8995BEF908F52E74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C9DE52E7D86D4AC23AAB025 /* LaunchScreen.storyboard */; };
 		3C9DE99A7A28C6099372DEBD /* TransientPhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE5E9C0C376F87FE7F64D /* TransientPhotoAlbum.swift */; };
 		3C9DEA69E6ED9FDBEADA7F1D /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE1CCF7174E84EFD27BCD /* APIClient.swift */; };
-		3C9DEAC60ACBA9A2DCD9E0CB /* PhotoPersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DEEC9FD18961510430844 /* PhotoPersistenceController.swift */; };
 		3C9DEB5AC532E3FF3F5128F1 /* TransientPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE16136FB88ADDE1544BA /* TransientPhoto.swift */; };
-		3C9DEB6EC6FB87C01CBF7E16 /* TravelLocationPersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE1809925FEECD319F533 /* TravelLocationPersistenceController.swift */; };
+		3C9DEB6EC6FB87C01CBF7E16 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE1809925FEECD319F533 /* PersistenceController.swift */; };
 		3C9DEBF24FCD2D372443EAA5 /* FlickrAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DEA3EC5C1BA7B4B75A644 /* FlickrAPIClient.swift */; };
 		3C9DEEF52CB3E78A4E0D1CB4 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE00328735B71E123A6F4 /* Photo+CoreDataProperties.swift */; };
 		3C9DEF44965846A9F8B04ECD /* TravelLocation+MKPointAnnotationConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE1CF7D6D3C42465D2D24 /* TravelLocation+MKPointAnnotationConversion.swift */; };
@@ -46,7 +45,7 @@
 		3C9DE10126E350924FFA2548 /* PhotoAlbum+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PhotoAlbum+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3C9DE14621A3586EAE7F7305 /* TravelLocationsMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelLocationsMapViewController.swift; sourceTree = "<group>"; };
 		3C9DE16136FB88ADDE1544BA /* TransientPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransientPhoto.swift; sourceTree = "<group>"; };
-		3C9DE1809925FEECD319F533 /* TravelLocationPersistenceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelLocationPersistenceController.swift; sourceTree = "<group>"; };
+		3C9DE1809925FEECD319F533 /* PersistenceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		3C9DE1CCF7174E84EFD27BCD /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		3C9DE1CF7D6D3C42465D2D24 /* TravelLocation+MKPointAnnotationConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TravelLocation+MKPointAnnotationConversion.swift"; sourceTree = "<group>"; };
 		3C9DE358586479BA2A63BD60 /* PhotoAlbum+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PhotoAlbum+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -57,7 +56,6 @@
 		3C9DEA3EC5C1BA7B4B75A644 /* FlickrAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrAPIClient.swift; sourceTree = "<group>"; };
 		3C9DEC8316518DAB61A3FD47 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3C9DED1FFF62D53378027568 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		3C9DEEC9FD18961510430844 /* PhotoPersistenceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPersistenceController.swift; sourceTree = "<group>"; };
 		3C9DEF4228ED434492EC3591 /* TravelLocation+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TravelLocation+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3C9DEF6953B9A6875955017D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Virtual Tourist/Base.lproj/Main.storyboard"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -134,8 +132,7 @@
 		3C9DE4AD56808DA1891EB799 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				3C9DE1809925FEECD319F533 /* TravelLocationPersistenceController.swift */,
-				3C9DEEC9FD18961510430844 /* PhotoPersistenceController.swift */,
+				3C9DE1809925FEECD319F533 /* PersistenceController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -291,9 +288,8 @@
 				3C9DE4BE7C991ED53F335541 /* TransientTravelLocation.swift in Sources */,
 				3C9DE99A7A28C6099372DEBD /* TransientPhotoAlbum.swift in Sources */,
 				3C9DEB5AC532E3FF3F5128F1 /* TransientPhoto.swift in Sources */,
-				3C9DEB6EC6FB87C01CBF7E16 /* TravelLocationPersistenceController.swift in Sources */,
+				3C9DEB6EC6FB87C01CBF7E16 /* PersistenceController.swift in Sources */,
 				3C9DEF44965846A9F8B04ECD /* TravelLocation+MKPointAnnotationConversion.swift in Sources */,
-				3C9DEAC60ACBA9A2DCD9E0CB /* PhotoPersistenceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

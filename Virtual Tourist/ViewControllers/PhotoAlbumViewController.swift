@@ -29,12 +29,12 @@ class PhotoAlbumViewController: UIViewController {
 
     // MARK: Properties
 
-    let photoPersistenceController = PhotoPersistenceController.shared
+    let persistenceCtrl = PersistenceController.shared
 
     var annotation: MKAnnotation!
-    var transientPhotoAlbum: TransientPhotoAlbum?
     var transientPhotos: [TransientPhoto]?
 
+    var photoAlbum: PhotoAlbum?
     var photos = [Photo](){
         didSet {
             collectionView.reloadData()
@@ -95,7 +95,9 @@ class PhotoAlbumViewController: UIViewController {
                 return
             }
 
-            self.transientPhotoAlbum = transientPhotoAlbum
+            self.photoAlbum = PhotoAlbum(page: transientPhotoAlbum!.page, pageCount: transientPhotoAlbum!.pageCount,
+                    context: self.persistenceCtrl.coreDataStack.context)
+
             self.transientPhotos = transientPhotos
 
             self.loadPhotoData(){
@@ -116,7 +118,7 @@ class PhotoAlbumViewController: UIViewController {
                     }
 
                     let photo = Photo(url: transientPhoto.url, imageData: transientPhoto.imageData!,
-                            context: self.photoPersistenceController.coreDataStack.context)
+                            context: self.persistenceCtrl.coreDataStack.context)
 
                     DispatchQueue.main.async {
                         self.photos.append(photo)

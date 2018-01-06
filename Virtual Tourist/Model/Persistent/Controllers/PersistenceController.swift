@@ -6,25 +6,26 @@
 import UIKit
 import CoreData
 
-class TravelLocationPersistenceController {
+class PersistenceController {
 
     // MARK: Properties
 
-    static let shared = TravelLocationPersistenceController()
+    static let shared = PersistenceController()
 
-    private let coreDataStack = (UIApplication.shared.delegate as! AppDelegate).coreDataStack
+    let coreDataStack = (UIApplication.shared.delegate as! AppDelegate).coreDataStack
 
     // MARK: Initialisation
 
-    private init(){
+    private init() {}
 
-    }
+}
 
-    // MARK: Convenience Methods
+// MARK: TravelLocation Convenience Methods
+
+extension PersistenceController{
 
     func persistTravelLocation(lat: Double, lon: Double){
         let travelLocation = TravelLocation(latitude: lat, longitude: lon, context: coreDataStack.context)
-        travelLocation.photoAlbum = PhotoAlbum(page: nil, pageCount: nil, context: coreDataStack.context)
 
         do{
             try coreDataStack.saveContext()

@@ -18,7 +18,7 @@ class TravelLocationsMapViewController: UIViewController {
 
     // MARK: Properties
 
-    private var tlPersistenceController = TravelLocationPersistenceController.shared
+    private var tlPersistenceController = PersistenceController.shared
 
     // MARK: Life Cycle
 

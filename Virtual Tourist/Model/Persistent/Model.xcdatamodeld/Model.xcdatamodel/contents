@@ -14,11 +14,11 @@
     <entity name="TravelLocation" representedClassName=".TravelLocation" syncable="YES">
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="photoAlbum" maxCount="1" deletionRule="Cascade" destinationEntity="PhotoAlbum" inverseName="travelLocation" inverseEntity="PhotoAlbum" syncable="YES"/>
+        <relationship name="photoAlbum" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="PhotoAlbum" inverseName="travelLocation" inverseEntity="PhotoAlbum" syncable="YES"/>
     </entity>
     <elements>
         <element name="Photo" positionX="-45" positionY="0" width="128" height="90"/>
-        <element name="TravelLocation" positionX="-18" positionY="27" width="128" height="90"/>
         <element name="PhotoAlbum" positionX="9" positionY="54" width="128" height="105"/>
+        <element name="TravelLocation" positionX="-18" positionY="27" width="128" height="90"/>
     </elements>
 </model>

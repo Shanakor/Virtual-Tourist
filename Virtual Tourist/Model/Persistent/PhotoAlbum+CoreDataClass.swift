@@ -14,7 +14,7 @@ import CoreData
 public class PhotoAlbum: NSManagedObject {
     static let entityName = "PhotoAlbum"
 
-    convenience init(page: Int32?, pageCount: Int32?, context: NSManagedObjectContext) {
+    convenience init(page: Int, pageCount: Int, context: NSManagedObjectContext) {
         let entityName = "PhotoAlbum"
 
         // An EntityDescription is an object that has access to all
@@ -23,13 +23,8 @@ public class PhotoAlbum: NSManagedObject {
         if let ent = NSEntityDescription.entity(forEntityName: entityName, in: context) {
             self.init(entity: ent, insertInto: context)
 
-            if let page = page {
-                self.page = page
-            }
-
-            if let pageCount = pageCount {
-                self.pageCount = pageCount
-            }
+            self.page = Int32(page)
+            self.pageCount = Int32(pageCount)
         } else {
             fatalError("Unable to find Entity name '\(entityName)'!")
         }
