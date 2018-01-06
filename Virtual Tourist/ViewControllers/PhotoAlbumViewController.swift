@@ -28,25 +28,44 @@ class PhotoAlbumViewController: UIViewController {
     private let minimumSpacing: CGFloat = 2
 
     // MARK: Properties
+
     var annotation: MKAnnotation!
+    var travelLocation: TravelLocation!
 
     let persistenceCtrl = PersistenceController.shared
 
-    var transientPhotos: [TransientPhoto]?
-    var travelLocation: TravelLocation!
-    var photoAlbum: PhotoAlbum?
-    var photos = [Photo](){
+    var transTravelLocation: TransientTravelLocation!
+    var transPhotoAlbum: TransientPhotoAlbum!
+    var transPhotos = [TransientPhoto](){
         didSet {
             collectionView.reloadData()
         }
     }
+
 
     // MARK: Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.travelLocation = persistenceCtrl.fetchTravelLocation(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
+
+        initTransientProperties()
         configureCollectionView()
+    }
+
+    private func initTransientProperties() {
+        transTravelLocation = TransientTravelLocation(latitude: travelLocation.latitude, longitude: travelLocation.longitude)
+
+        guard let photoAlbum = travelLocation.photoAlbum else{
+            return
+        }
+
+        transPhotoAlbum = TransientPhotoAlbum(page: photoAlbum.page, pageCount: photoAlbum.pageCount)
+
+        if let photos = photoAlbum.photos{
+            transPhotos = Photo.convertArrayToTransient(photos.allObjects as! [Photo])
+        }
     }
 
     private func configureCollectionView() {
@@ -66,8 +85,6 @@ class PhotoAlbumViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.travelLocation = persistenceCtrl.fetchTravelLocation(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
-
         mapView.addAnnotation(annotation)
         mapView.showAnnotations([annotation], animated: false)
     }
@@ -75,12 +92,14 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        configureUI(enabled: false)
+        if self.transPhotoAlbum == nil {
+            configureUI(enabled: false)
 
-        downloadPhotoAlbum(){
-            DispatchQueue.main.async {
-                self.configureUI(enabled: true)
-                self.persistPhotoAlbum()
+            downloadPhotoAlbum() {
+                DispatchQueue.main.async {
+                    self.configureUI(enabled: true)
+                    self.persistPhotoAlbum()
+                }
             }
         }
     }
@@ -89,6 +108,21 @@ class PhotoAlbumViewController: UIViewController {
     // TODO: Replace print(error) everywhere with UIAlertDialogs.
 
     private func persistPhotoAlbum() {
+        if let photoAlbum = travelLocation.photoAlbum{
+            // Due to delete rule cascade, all photos get deleted also.
+            persistenceCtrl.context.delete(photoAlbum)
+        }
+
+        let photoAlbum = PhotoAlbum(page: transPhotoAlbum.page, pageCount: transPhotoAlbum.pageCount!, context: persistenceCtrl.context)
+        photoAlbum.travelLocation = travelLocation
+
+        var photos = [Photo]()
+        for transPhoto in transPhotos{
+            let photo = Photo(url: transPhoto.url!, imageData: transPhoto.imageData, context: persistenceCtrl.context)
+            photo.photoAlbum = photoAlbum
+            photos.append(photo)
+        }
+
         persistenceCtrl.saveContext()
     }
 
@@ -96,53 +130,36 @@ class PhotoAlbumViewController: UIViewController {
 
         // PhotoAlbum metadata.
 
-        let travelLocation = TransientTravelLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
-
-        FlickrAPIClient.shared.getPhotoAlbumMetadata(travelLocation: travelLocation,
-                photoAlbum: nil){
-            transientPhotoAlbum, transientPhotos, error in
+        FlickrAPIClient.shared.getPhotoMetadata(for: transTravelLocation, page: (transPhotoAlbum == nil ? 1 : transPhotoAlbum!.page)){
+            transPhotoAlbum, transPhotos, error in
 
             guard error == nil else{
                 print(error!)
                 return
             }
 
-            if let photoAlbum = self.travelLocation.photoAlbum{
-                self.photoAlbum = photoAlbum
-                self.photoAlbum!.page = Int32(transientPhotoAlbum!.page)
-                self.photoAlbum!.pageCount = Int32(transientPhotoAlbum!.pageCount)
-            }
-            else{
-                self.photoAlbum = PhotoAlbum(page: transientPhotoAlbum!.page, pageCount: transientPhotoAlbum!.pageCount,
-                        context: self.persistenceCtrl.context)
-                self.photoAlbum!.travelLocation = self.travelLocation
-            }
+            self.transPhotoAlbum = transPhotoAlbum
+            self.transPhotos = transPhotos!
 
-            self.transientPhotos = transientPhotos
-
-            self.loadPhotoData(){
-                completionHandler()
-            }
+            self.loadPhotoData(of: transPhotos!, completionHandler: completionHandler)
         }
     }
 
-    private func loadPhotoData(completionHandler: @escaping () -> Void) {
+    private func loadPhotoData(of transientPhotos: [TransientPhoto], completionHandler: @escaping () -> Void) {
 
-        FlickrAPIClient.shared.downloadPhotoData(self.transientPhotos!,
+        FlickrAPIClient.shared.downloadPhotoData(of: transientPhotos,
                 progressHandler: {
-                    transientPhoto, error in
+                    transPhoto, error in
 
                     guard error == nil else{
                         print(error!)
                         return
                     }
 
-                    let photo = Photo(url: transientPhoto.url, imageData: transientPhoto.imageData!,
-                            context: self.persistenceCtrl.context)
-                    photo.photoAlbum = self.photoAlbum
-
                     DispatchQueue.main.async {
-                        self.photos.append(photo)
+                        let idx = self.transPhotos.index(where: {other in transPhoto.url == other.url})
+                        self.transPhotos.remove(at: idx!)
+                        self.transPhotos.insert(transPhoto, at: idx!)
                     }
                 },
                 completionHandler: {
@@ -171,13 +188,14 @@ extension PhotoAlbumViewController{
 extension PhotoAlbumViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+        return transPhotos.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let photo = transPhotos[indexPath.row]
+
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.PhotoCell, for: indexPath) as! PhotoCollectionViewCell
-        let photo = photos[indexPath.row]
-        
+
         cell.setup(with: photo)
         
         return cell

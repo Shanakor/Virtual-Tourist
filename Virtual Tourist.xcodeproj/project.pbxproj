@@ -15,6 +15,7 @@
 		3C9DE0A6F22044CBF57EC375 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DED1FFF62D53378027568 /* CoreDataStack.swift */; };
 		3C9DE190048B2581D4A9C2D4 /* PhotoAlbum+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE10126E350924FFA2548 /* PhotoAlbum+CoreDataProperties.swift */; };
 		3C9DE19812CF6DE773CD2F11 /* PhotoAlbum+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE358586479BA2A63BD60 /* PhotoAlbum+CoreDataClass.swift */; };
+		3C9DE1E8B5515AE27A6AEDC4 /* Photo+TransientConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE7AE2710C258A5EBCD6D /* Photo+TransientConversion.swift */; };
 		3C9DE2D1D97518B27B5EEAFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C9DEFABBF3A9957507BBEBD /* Main.storyboard */; };
 		3C9DE2F850990DF300ED8301 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DEC8316518DAB61A3FD47 /* Photo+CoreDataClass.swift */; };
 		3C9DE38948E7ECBBF4C259BB /* TravelLocation+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DE581A526D59EA2EAA5BC /* TravelLocation+CoreDataClass.swift */; };
@@ -53,6 +54,7 @@
 		3C9DE46E093F8CD2C33C7A84 /* TransientTravelLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransientTravelLocation.swift; sourceTree = "<group>"; };
 		3C9DE581A526D59EA2EAA5BC /* TravelLocation+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TravelLocation+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3C9DE5E9C0C376F87FE7F64D /* TransientPhotoAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransientPhotoAlbum.swift; sourceTree = "<group>"; };
+		3C9DE7AE2710C258A5EBCD6D /* Photo+TransientConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+TransientConversion.swift"; sourceTree = "<group>"; };
 		3C9DEA3EC5C1BA7B4B75A644 /* FlickrAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrAPIClient.swift; sourceTree = "<group>"; };
 		3C9DEC8316518DAB61A3FD47 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3C9DED1FFF62D53378027568 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				3C9DE1CF7D6D3C42465D2D24 /* TravelLocation+MKPointAnnotationConversion.swift */,
+				3C9DE7AE2710C258A5EBCD6D /* Photo+TransientConversion.swift */,
 			);
 			path = Conversion;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 				3C9DEB5AC532E3FF3F5128F1 /* TransientPhoto.swift in Sources */,
 				3C9DEB6EC6FB87C01CBF7E16 /* PersistenceController.swift in Sources */,
 				3C9DEF44965846A9F8B04ECD /* TravelLocation+MKPointAnnotationConversion.swift in Sources */,
+				3C9DE1E8B5515AE27A6AEDC4 /* Photo+TransientConversion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

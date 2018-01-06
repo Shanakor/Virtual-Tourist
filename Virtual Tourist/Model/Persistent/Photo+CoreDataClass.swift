@@ -14,7 +14,7 @@ import CoreData
 public class Photo: NSManagedObject {
     static let entityName = "Photo"
 
-    convenience init(url: String, imageData: Data, context: NSManagedObjectContext) {
+    convenience init(url: String, imageData: NSData?, context: NSManagedObjectContext) {
         let entityName = "Photo"
 
         // An EntityDescription is an object that has access to all
@@ -24,7 +24,7 @@ public class Photo: NSManagedObject {
             self.init(entity: ent, insertInto: context)
 
             self.url = url
-            self.imageData = imageData as NSData
+            self.imageData = imageData
         } else {
             fatalError("Unable to find Entity name '\(entityName)'!")
         }

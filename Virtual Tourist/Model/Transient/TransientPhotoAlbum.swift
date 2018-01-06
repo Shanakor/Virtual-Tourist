@@ -6,6 +6,6 @@
 import Foundation
 
 struct TransientPhotoAlbum {
-    var page: Int
-    var pageCount: Int
+    var page: Int32
+    var pageCount: Int32?
 }

@@ -6,6 +6,6 @@
 import Foundation
 
 struct TransientPhoto {
-    var url: String
-    var imageData: Data?
+    var url: String?
+    var imageData: NSData?
 }

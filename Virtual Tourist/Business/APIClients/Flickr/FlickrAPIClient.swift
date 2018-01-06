@@ -40,8 +40,8 @@ class FlickrAPIClient: APIClient {
 
     // MARK: Convenience methods
 
-    func getPhotoAlbumMetadata(travelLocation: TransientTravelLocation, photoAlbum: TransientPhotoAlbum?,
-                               completionHandler: @escaping (TransientPhotoAlbum?, [TransientPhoto]?, APIClientError?) -> Void){
+    func getPhotoMetadata(for travelLocation: TransientTravelLocation, page: Int32,
+                          completionHandler: @escaping (TransientPhotoAlbum?, [TransientPhoto]?, APIClientError?) -> Void){
 
         // Construct method parameters.
         let methodParameters = [
@@ -52,7 +52,7 @@ class FlickrAPIClient: APIClient {
             QueryKeys.Format: QueryValues.ResponseFormat,
             QueryKeys.NoJSONCallback: QueryValues.DisableJSONCallback,
             QueryKeys.PerPage: QueryValues.PerPage,
-            QueryKeys.Page: photoAlbum == nil ? "1" : String(photoAlbum!.page),
+            QueryKeys.Page: String(page),
             QueryKeys.BoundingBox: createBBoxString(lat: travelLocation.latitude, lon: travelLocation.longitude)
         ]
 
@@ -134,7 +134,7 @@ class FlickrAPIClient: APIClient {
             return
         }
 
-        guard let pageValue = page as? Int else{
+        guard let pageValue = page as? Int32 else{
             completionHandler(nil, APIClientError.parseError(description: "Could not convert \(page) to Integer"))
             return
         }
@@ -144,7 +144,7 @@ class FlickrAPIClient: APIClient {
             return
         }
 
-        guard let pagesValue = pages as? Int else{
+        guard let pagesValue = pages as? Int32 else{
             completionHandler(nil, APIClientError.parseError(description: "Could not convert \(pages) to Integer"))
             return
         }
@@ -174,13 +174,13 @@ class FlickrAPIClient: APIClient {
         return number
     }
 
-    func downloadPhotoData(_ transientPhotos: [TransientPhoto], progressHandler: @escaping (TransientPhoto, APIClientError?) -> Void,
+    func downloadPhotoData(of transientPhotos: [TransientPhoto], progressHandler: @escaping (TransientPhoto, APIClientError?) -> Void,
                            completionHandler: @escaping (APIClientError?) -> Void){
 
         for (i, photo) in transientPhotos.enumerated(){
 
-            guard let url = URL(string: photo.url) else{
-                progressHandler(photo, .parseError(description: "The url '\(photo.url)' was invalid!"))
+            guard let url = URL(string: photo.url!) else{
+                progressHandler(photo, .parseError(description: "The url '\(photo.url!)' was invalid!"))
                 continue
             }
 
@@ -192,7 +192,7 @@ class FlickrAPIClient: APIClient {
                     return
                 }
 
-                progressHandler(TransientPhoto(url: photo.url, imageData: data), nil)
+                progressHandler(TransientPhoto(url: photo.url, imageData: NSData(data: data!)), nil)
 
                 if i == transientPhotos.count - 1{
                     completionHandler(nil)

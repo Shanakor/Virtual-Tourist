@@ -16,7 +16,11 @@ class PhotoCollectionViewCell: UICollectionViewCell {
 
     // MARK: Initialization
 
-    func setup(with photo:Photo){
-        imageView.image = UIImage(data: photo.imageData as! Data)
+    func setup(with photo: TransientPhoto){
+        guard let imageData = photo.imageData else{
+            return
+        }
+
+        imageView.image = UIImage(data: imageData as Data)
     }
 }

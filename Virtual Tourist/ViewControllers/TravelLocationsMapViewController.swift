@@ -110,7 +110,7 @@ class TravelLocationsMapViewController: UIViewController {
     }
 
     private func persistTravelLocation(coordinate: CLLocationCoordinate2D) {
-        TravelLocation(latitude: coordinate.latitude, longitude: coordinate.longitude, context: persistenceCtrl.context)
+        let _ = TravelLocation(latitude: coordinate.latitude, longitude: coordinate.longitude, context: persistenceCtrl.context)
         persistenceCtrl.saveContext()
     }
 
