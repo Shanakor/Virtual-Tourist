@@ -51,8 +51,9 @@ class PhotoAlbumViewController: UIViewController {
         self.travelLocation = persistenceCtrl.fetchTravelLocation(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
 
         initTransientProperties()
+        configureContainerViewLayout()
 
-        configureContainerViews()
+        self.collectionViewController.delegate = self
     }
 
     private func initTransientProperties() {
@@ -111,7 +112,7 @@ class PhotoAlbumViewController: UIViewController {
 
             DispatchQueue.main.async{
                 // Show image label if no photos were found.
-                self.configureContainerViews()
+                self.configureContainerViewLayout()
             }
 
             self.loadPhotoData(of: transPhotos!, completionHandler: completionHandler)
@@ -185,10 +186,20 @@ extension PhotoAlbumViewController{
         newCollectionButton.isEnabled = enabled
     }
     
-    fileprivate func configureContainerViews() {
+    fileprivate func configureContainerViewLayout() {
         let shouldHideCollectionViewContainerView = (transPhotoAlbum != nil && transPhotos.count == 0)
         collectionViewContainerView.isHidden = shouldHideCollectionViewContainerView
         noImagesContainerView.isHidden = !shouldHideCollectionViewContainerView
+    }
+}
+
+// MARK: PhotoCollectionViewViewController delegate
+
+extension PhotoAlbumViewController: PhotoCollectionViewViewControllerDelegate{
+
+    func didRemovePhotoAt(_ indexPath: IndexPath) {
+        self.transPhotos.remove(at: indexPath.row)
+        self.persistChanges()
     }
 }
 

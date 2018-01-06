@@ -16,6 +16,7 @@ class PhotoCollectionViewViewController: UIViewController {
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
 
     // MARK: Constants
+
     fileprivate struct Identifiers{
         static let PhotoCell = "PhotoCell"
         static let LoadingPhotoCell = "LoadingPhotoCell"
@@ -32,6 +33,8 @@ class PhotoCollectionViewViewController: UIViewController {
         }
     }
 
+    var delegate: PhotoCollectionViewViewControllerDelegate?
+
     // MARK: Lifecycle
 
     override func viewDidLoad() {
@@ -42,11 +45,12 @@ class PhotoCollectionViewViewController: UIViewController {
 
     private func configureCollectionView() {
         self.collectionView.dataSource = self
+        self.collectionView.delegate = self
 
         configureCollectionViewFlowLayout()
     }
 
-    private func configureCollectionViewFlowLayout(){
+    private func configureCollectionViewFlowLayout() {
         flowLayout.minimumInteritemSpacing = minimumSpacing
         flowLayout.minimumLineSpacing = minimumSpacing
 
@@ -55,9 +59,11 @@ class PhotoCollectionViewViewController: UIViewController {
     }
 }
 
-// MARK: UICollectionView DataSource
+// MARK: UICollectionView DataSource and Delegate
 
-extension PhotoCollectionViewViewController: UICollectionViewDataSource {
+extension PhotoCollectionViewViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+
+    // MARK: DataSource
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return transPhotos.count
@@ -74,6 +80,17 @@ extension PhotoCollectionViewViewController: UICollectionViewDataSource {
         }
         else{
             return collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.LoadingPhotoCell, for: indexPath)
+        }
+    }
+
+    // MARK: Delegate
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell != nil {
+            self.transPhotos.remove(at: indexPath.row)
+            self.collectionView.reloadData()
+
+            delegate?.didRemovePhotoAt(indexPath)
         }
     }
 }
