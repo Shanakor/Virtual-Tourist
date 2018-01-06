@@ -75,13 +75,27 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="TWv-aC-RbT">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="TWv-aC-RbT" customClass="PhotoCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f2x-9L-IVP">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                        </imageView>
+                                                    </subviews>
                                                 </view>
+                                                <constraints>
+                                                    <constraint firstItem="f2x-9L-IVP" firstAttribute="leading" secondItem="TWv-aC-RbT" secondAttribute="leading" id="6t7-z7-C9w"/>
+                                                    <constraint firstItem="f2x-9L-IVP" firstAttribute="top" secondItem="TWv-aC-RbT" secondAttribute="top" id="G2R-cG-Nh9"/>
+                                                    <constraint firstAttribute="trailing" secondItem="f2x-9L-IVP" secondAttribute="trailing" id="M4L-c0-VjZ"/>
+                                                    <constraint firstAttribute="bottom" secondItem="f2x-9L-IVP" secondAttribute="bottom" id="pxV-6K-t0b"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="imageView" destination="f2x-9L-IVP" id="wRd-qd-xc6"/>
+                                                </connections>
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
@@ -113,6 +127,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="7Dh-xU-e5u"/>
                     <connections>
+                        <outlet property="collectionView" destination="W5J-qZ-Jvu" id="Pzc-86-AGb"/>
+                        <outlet property="flowLayout" destination="7rs-in-y8r" id="CCX-Zi-9s8"/>
                         <outlet property="mapView" destination="3i6-L1-a33" id="3tE-NL-so9"/>
                     </connections>
                 </viewController>

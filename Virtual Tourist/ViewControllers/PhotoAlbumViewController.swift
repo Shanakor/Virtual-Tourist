@@ -14,6 +14,17 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: IBOutlets
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+
+    // MARK: Constants
+
+    fileprivate struct Identifiers{
+        static let PhotoCell = "PhotoCell"
+    }
+
+    private let maxItemsInRow: CGFloat = 3
+    private let minimumSpacing: CGFloat = 2
 
     // MARK: Properties
 
@@ -25,11 +36,26 @@ class PhotoAlbumViewController: UIViewController {
 
     var photos = [Photo](){
         didSet {
-            displayPhotoInCollectionView(photo: photos[photos.endIndex - 1])
+            collectionView.reloadData()
         }
     }
 
     // MARK: Life Cycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.collectionView.dataSource = self
+        configureCollectionViewFlowLayout()
+    }
+
+    private func configureCollectionViewFlowLayout(){
+        flowLayout.minimumInteritemSpacing = minimumSpacing
+        flowLayout.minimumLineSpacing = minimumSpacing
+
+        let dimension = (view.frame.width - 2 * minimumSpacing) / maxItemsInRow
+        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -83,14 +109,28 @@ class PhotoAlbumViewController: UIViewController {
                     let photo = Photo(url: transientPhoto.url, imageData: transientPhoto.imageData!,
                             context: self.photoPersistenceController.coreDataStack.context)
 
-                    self.photos.append(photo)
+                    DispatchQueue.main.async {
+                        self.photos.append(photo)
+                    }
                 },
                 completionHandler: {error in if error != nil {print(error!)}})
     }
+}
 
-    // MARK: UI helper methods
+// MARK: UICollectionView DataSource
 
-    private func displayPhotoInCollectionView(photo: Photo){
+extension PhotoAlbumViewController: UICollectionViewDataSource {
 
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photos.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.PhotoCell, for: indexPath) as! PhotoCollectionViewCell
+        let photo = photos[indexPath.row]
+        
+        cell.setup(with: photo)
+        
+        return cell
     }
 }
