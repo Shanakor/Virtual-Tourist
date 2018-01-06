@@ -14,19 +14,17 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: IBOutlets
     
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var newCollectionButton: UIBarButtonItem!
+    @IBOutlet weak var collectionViewContainerView: UIView!
+    @IBOutlet weak var noImagesContainerView: UIView!
     
     // MARK: Constants
 
     fileprivate struct Identifiers{
-        static let PhotoCell = "PhotoCell"
-        static let LoadingPhotoCell = "LoadingPhotoCell"
+        struct Segues{
+            static let EmbedCollectionViewController = "EmbedCollectionViewController"
+        }
     }
-
-    private let maxItemsInRow: CGFloat = 3
-    private let minimumSpacing: CGFloat = 2
 
     // MARK: Properties
 
@@ -35,14 +33,15 @@ class PhotoAlbumViewController: UIViewController {
 
     let persistenceCtrl = PersistenceController.shared
 
-    var transTravelLocation: TransientTravelLocation!
-    var transPhotoAlbum: TransientPhotoAlbum!
-    var transPhotos = [TransientPhoto](){
+    private var transTravelLocation: TransientTravelLocation!
+    private var transPhotoAlbum: TransientPhotoAlbum!
+    private var transPhotos = [TransientPhoto](){
         didSet {
-            collectionView.reloadData()
+            collectionViewController.transPhotos = transPhotos
         }
     }
 
+    private var collectionViewController: PhotoCollectionViewViewController!
 
     // MARK: Life Cycle
 
@@ -52,7 +51,8 @@ class PhotoAlbumViewController: UIViewController {
         self.travelLocation = persistenceCtrl.fetchTravelLocation(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
 
         initTransientProperties()
-        configureCollectionView()
+
+        configureContainerViews()
     }
 
     private func initTransientProperties() {
@@ -67,20 +67,6 @@ class PhotoAlbumViewController: UIViewController {
         if let photos = photoAlbum.photos{
             transPhotos = TransientPersistentConversionBridge.toTransientPhotos(photos.allObjects as! [Photo])
         }
-    }
-
-    private func configureCollectionView() {
-        self.collectionView.dataSource = self
-
-        configureCollectionViewFlowLayout()
-    }
-
-    private func configureCollectionViewFlowLayout(){
-        flowLayout.minimumInteritemSpacing = minimumSpacing
-        flowLayout.minimumLineSpacing = minimumSpacing
-
-        let dimension = (view.frame.width - 2 * minimumSpacing) / maxItemsInRow
-        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -142,6 +128,11 @@ class PhotoAlbumViewController: UIViewController {
             self.transPhotoAlbum = transPhotoAlbum
             self.transPhotos = transPhotos!
 
+            DispatchQueue.main.async{
+                // Show image label if no photos were found.
+                self.configureContainerViews()
+            }
+
             self.loadPhotoData(of: transPhotos!, completionHandler: completionHandler)
         }
     }
@@ -173,6 +164,15 @@ class PhotoAlbumViewController: UIViewController {
                     completionHandler()
                 })
     }
+
+    // Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier{
+            if identifier == Identifiers.Segues.EmbedCollectionViewController{
+                collectionViewController = segue.destination as! PhotoCollectionViewViewController
+            }
+        }
+    }
 }
 
 // MARK: UI helper methods
@@ -182,27 +182,11 @@ extension PhotoAlbumViewController{
     fileprivate func configureUI(enabled: Bool){
         newCollectionButton.isEnabled = enabled
     }
-}
-
-// MARK: UICollectionView DataSource
-
-extension PhotoAlbumViewController: UICollectionViewDataSource {
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return transPhotos.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let photo = transPhotos[indexPath.row]
-
-        if photo.imageData != nil {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.PhotoCell, for: indexPath) as! PhotoCollectionViewCell
-
-            cell.setup(with: photo)
-            return cell
-        }
-        else{
-            return collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.LoadingPhotoCell, for: indexPath)
-        }
+    
+    fileprivate func configureContainerViews() {
+        let shouldHideCollectionViewContainerView = (transPhotoAlbum != nil && transPhotos.count == 0)
+        collectionViewContainerView.isHidden = shouldHideCollectionViewContainerView
+        noImagesContainerView.isHidden = !shouldHideCollectionViewContainerView
     }
 }
+
