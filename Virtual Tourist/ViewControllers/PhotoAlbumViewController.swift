@@ -92,6 +92,24 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
 
+    // MARK: IBActions
+    
+    @IBAction func downloadNewPage(_ sender: Any) {
+        transPhotoAlbum.page = transPhotoAlbum.page + 1
+
+        if transPhotoAlbum.page > transPhotoAlbum.pageCount!{
+            transPhotoAlbum.page = 1
+        }
+
+        configureUI(enabled: false)
+        downloadPhotoAlbum(){
+            DispatchQueue.main.async {
+                self.configureUI(enabled: true)
+                self.persistChanges()
+            }
+        }
+    }
+    
     // MARK: Network Requests
     // TODO: Replace print(error) everywhere with UIAlertDialogs.
 
@@ -147,15 +165,6 @@ class PhotoAlbumViewController: UIViewController {
                 })
     }
 
-    // Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let identifier = segue.identifier{
-            if identifier == Identifiers.Segues.EmbedCollectionViewController{
-                collectionViewController = segue.destination as! PhotoCollectionViewViewController
-            }
-        }
-    }
-
     // MARK: Persistence
 
     private func persistChanges() {
@@ -175,6 +184,15 @@ class PhotoAlbumViewController: UIViewController {
         }
 
         persistenceCtrl.saveContext()
+    }
+    
+    // Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier{
+            if identifier == Identifiers.Segues.EmbedCollectionViewController{
+                collectionViewController = segue.destination as! PhotoCollectionViewViewController
+            }
+        }
     }
 }
 
