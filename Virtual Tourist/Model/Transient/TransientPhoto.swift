@@ -7,4 +7,5 @@ import Foundation
 
 struct TransientPhoto {
     var url: String
+    var imageData: Data?
 }

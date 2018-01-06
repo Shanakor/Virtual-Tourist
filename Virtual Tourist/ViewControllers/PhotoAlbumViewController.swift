@@ -14,10 +14,20 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: IBOutlets
     
     @IBOutlet weak var mapView: MKMapView!
-    
+
     // MARK: Properties
 
+    let photoPersistenceController = PhotoPersistenceController.shared
+
     var annotation: MKAnnotation!
+    var transientPhotoAlbum: TransientPhotoAlbum?
+    var transientPhotos: [TransientPhoto]?
+
+    var photos = [Photo](){
+        didSet{
+            print(photos)
+        }
+    }
 
     // MARK: Life Cycle
 
@@ -31,14 +41,49 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        let transientTravelLocation = TransientTravelLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
+        loadPhotoAlbum()
+    }
 
-        FlickrAPIClient.shared.getPhotoAlbumMetadata(travelLocation: transientTravelLocation,
+    // TODO: Replace print(error) everywhere with UIAlertDialogs.
+
+    private func loadPhotoAlbum() {
+
+        // PhotoAlbum metadata.
+
+        let travelLocation = TransientTravelLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
+
+        FlickrAPIClient.shared.getPhotoAlbumMetadata(travelLocation: travelLocation,
                 photoAlbum: nil){
             transientPhotoAlbum, transientPhotos, error in
 
-            print("PhotoAlbum: \(transientPhotoAlbum)")
-            print("Photos: \(transientPhotos)")
+            guard error == nil else{
+                print(error!)
+                return
+            }
+
+            self.transientPhotoAlbum = transientPhotoAlbum
+            self.transientPhotos = transientPhotos
+
+            self.loadPhotoData()
         }
+    }
+
+    private func loadPhotoData() {
+
+        FlickrAPIClient.shared.downloadPhotoData(self.transientPhotos!,
+                progressHandler: {
+                    transientPhoto, error in
+
+                    guard error == nil else{
+                        print(error!)
+                        return
+                    }
+
+                    let photo = Photo(url: transientPhoto.url, imageData: transientPhoto.imageData!,
+                            context: self.photoPersistenceController.coreDataStack.context)
+
+                    self.photos.append(photo)
+                },
+                completionHandler: {error in if error != nil {print(error!)}})
     }
 }

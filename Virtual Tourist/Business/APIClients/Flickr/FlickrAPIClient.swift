@@ -122,7 +122,7 @@ class FlickrAPIClient: APIClient {
                 return
             }
 
-            photos.append(TransientPhoto(url: url))
+            photos.append(TransientPhoto(url: url, imageData: nil))
         }
 
         completionHandler(photos, nil)
@@ -174,13 +174,26 @@ class FlickrAPIClient: APIClient {
         return number
     }
 
-//    private func parseImagesData(_ parsedResult: [String: AnyObject], completionHandler: @escaping ([StudentInformation]?, APIClientError?) -> Void){
-//        guard let resultArray = parsedResult[JSONKeys.Results] as? [[String: AnyObject]] else{
-//            completionHandler(nil, APIClientError.parseError(description: "Cannot find key '\(JSONKeys.Results)' in \(parsedResult)"))
-//            return
-//        }
-//
-//        let studentInformations = StudentInformation.studentInformations(from: resultArray)
-//        completionHandler(studentInformations, nil)
-//    }
+    func downloadPhotoData(_ transientPhotos: [TransientPhoto], progressHandler: @escaping (TransientPhoto, APIClientError?) -> Void,
+                           completionHandler: @escaping (APIClientError?) -> Void){
+
+        for photo in transientPhotos{
+
+            guard let url = URL(string: photo.url) else{
+                progressHandler(photo, .parseError(description: "The url '\(photo.url)' was invalid!"))
+                continue
+            }
+
+            taskForData(with: url){
+                data, error in
+
+                guard error == nil else{
+                    completionHandler(error)
+                    return
+                }
+
+                progressHandler(TransientPhoto(url: photo.url, imageData: data), nil)
+            }
+        }
+    }
 }
