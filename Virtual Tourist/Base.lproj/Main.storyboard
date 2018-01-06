@@ -97,6 +97,24 @@
                                                     <outlet property="imageView" destination="f2x-9L-IVP" id="wRd-qd-xc6"/>
                                                 </connections>
                                             </collectionViewCell>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LoadingPhotoCell" id="9Td-Qj-wGd" customClass="LoadingPhotoCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
+                                                <rect key="frame" x="65" y="0.0" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ybO-rc-wYi">
+                                                            <rect key="frame" x="15" y="15" width="20" height="20"/>
+                                                        </activityIndicatorView>
+                                                    </subviews>
+                                                </view>
+                                                <color key="backgroundColor" white="0.95159135262171424" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstItem="ybO-rc-wYi" firstAttribute="centerX" secondItem="9Td-Qj-wGd" secondAttribute="centerX" id="0Ke-7z-5GC"/>
+                                                    <constraint firstItem="ybO-rc-wYi" firstAttribute="centerY" secondItem="9Td-Qj-wGd" secondAttribute="centerY" id="rvE-gQ-CAg"/>
+                                                </constraints>
+                                            </collectionViewCell>
                                         </cells>
                                     </collectionView>
                                 </subviews>

@@ -22,6 +22,7 @@ class PhotoAlbumViewController: UIViewController {
 
     fileprivate struct Identifiers{
         static let PhotoCell = "PhotoCell"
+        static let LoadingPhotoCell = "LoadingPhotoCell"
     }
 
     private let maxItemsInRow: CGFloat = 3
@@ -194,10 +195,14 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let photo = transPhotos[indexPath.row]
 
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.PhotoCell, for: indexPath) as! PhotoCollectionViewCell
+        if photo.imageData != nil {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.PhotoCell, for: indexPath) as! PhotoCollectionViewCell
 
-        cell.setup(with: photo)
-        
-        return cell
+            cell.setup(with: photo)
+            return cell
+        }
+        else{
+            return collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.LoadingPhotoCell, for: indexPath)
+        }
     }
 }
