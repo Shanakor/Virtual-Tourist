@@ -85,7 +85,7 @@ class PhotoAlbumViewController: UIViewController {
             downloadPhotoAlbum() {
                 DispatchQueue.main.async {
                     self.configureUI(enabled: true)
-                    self.persistPhotoAlbum()
+                    self.persistChanges()
                 }
             }
         }
@@ -93,25 +93,6 @@ class PhotoAlbumViewController: UIViewController {
 
     // MARK: Network Requests
     // TODO: Replace print(error) everywhere with UIAlertDialogs.
-
-    private func persistPhotoAlbum() {
-        if let photoAlbum = travelLocation.photoAlbum{
-            // Due to delete rule cascade, all photos get deleted also.
-            persistenceCtrl.context.delete(photoAlbum)
-        }
-
-        let photoAlbum = TransientPersistentConversionBridge.toPhotoAlbum(transPhotoAlbum, context: persistenceCtrl.context)
-        photoAlbum.travelLocation = travelLocation
-
-        var photos = [Photo]()
-        for transPhoto in transPhotos{
-            let photo = TransientPersistentConversionBridge.toPhoto(transPhoto, context: persistenceCtrl.context)
-            photo.photoAlbum = photoAlbum
-            photos.append(photo)
-        }
-
-        persistenceCtrl.saveContext()
-    }
 
     private func downloadPhotoAlbum(completionHandler: @escaping () -> Void) {
 
@@ -172,6 +153,27 @@ class PhotoAlbumViewController: UIViewController {
                 collectionViewController = segue.destination as! PhotoCollectionViewViewController
             }
         }
+    }
+
+    // MARK: Persistence
+
+    private func persistChanges() {
+        if let photoAlbum = travelLocation.photoAlbum{
+            // Due to delete rule cascade, all photos get deleted also.
+            persistenceCtrl.context.delete(photoAlbum)
+        }
+
+        let photoAlbum = TransientPersistentConversionBridge.toPhotoAlbum(transPhotoAlbum, context: persistenceCtrl.context)
+        photoAlbum.travelLocation = travelLocation
+
+        var photos = [Photo]()
+        for transPhoto in transPhotos{
+            let photo = TransientPersistentConversionBridge.toPhoto(transPhoto, context: persistenceCtrl.context)
+            photo.photoAlbum = photoAlbum
+            photos.append(photo)
+        }
+
+        persistenceCtrl.saveContext()
     }
 }
 
