@@ -18,7 +18,7 @@ class TravelLocationsMapViewController: UIViewController {
 
     // MARK: Properties
 
-    private var tlPersistenceController = PersistenceController.shared
+    private var persistenceCtrl = PersistenceController.shared
 
     // MARK: Life Cycle
 
@@ -34,7 +34,7 @@ class TravelLocationsMapViewController: UIViewController {
         let gestureRecognizer = initLongPressGestureRecognizer()
         mapView.addGestureRecognizer(gestureRecognizer)
 
-        let travelLocations = tlPersistenceController.fetchAllTravelLocations()
+        let travelLocations = persistenceCtrl.fetchAllTravelLocations()
         let annotations = TravelLocation.convertArrayToMKPointAnnotations(travelLocations)
         mapView.addAnnotations(annotations)
     }
@@ -110,7 +110,8 @@ class TravelLocationsMapViewController: UIViewController {
     }
 
     private func persistTravelLocation(coordinate: CLLocationCoordinate2D) {
-        tlPersistenceController.persistTravelLocation(lat: coordinate.latitude, lon: coordinate.longitude)
+        TravelLocation(latitude: coordinate.latitude, longitude: coordinate.longitude, context: persistenceCtrl.context)
+        persistenceCtrl.saveContext()
     }
 
     private func addPointAnnotationToMapViewAt(coordinate: CLLocationCoordinate2D) {

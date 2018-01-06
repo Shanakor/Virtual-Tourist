@@ -28,12 +28,12 @@ class PhotoAlbumViewController: UIViewController {
     private let minimumSpacing: CGFloat = 2
 
     // MARK: Properties
+    var annotation: MKAnnotation!
 
     let persistenceCtrl = PersistenceController.shared
 
-    var annotation: MKAnnotation!
     var transientPhotos: [TransientPhoto]?
-
+    var travelLocation: TravelLocation!
     var photoAlbum: PhotoAlbum?
     var photos = [Photo](){
         didSet {
@@ -46,7 +46,12 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        configureCollectionView()
+    }
+
+    private func configureCollectionView() {
         self.collectionView.dataSource = self
+
         configureCollectionViewFlowLayout()
     }
 
@@ -61,6 +66,8 @@ class PhotoAlbumViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        self.travelLocation = persistenceCtrl.fetchTravelLocation(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
+
         mapView.addAnnotation(annotation)
         mapView.showAnnotations([annotation], animated: false)
     }
@@ -70,9 +77,10 @@ class PhotoAlbumViewController: UIViewController {
 
         configureUI(enabled: false)
 
-        loadPhotoAlbum(){
+        downloadPhotoAlbum(){
             DispatchQueue.main.async {
                 self.configureUI(enabled: true)
+                self.persistPhotoAlbum()
             }
         }
     }
@@ -80,7 +88,11 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: Network Requests
     // TODO: Replace print(error) everywhere with UIAlertDialogs.
 
-    private func loadPhotoAlbum(completionHandler: @escaping () -> Void) {
+    private func persistPhotoAlbum() {
+        persistenceCtrl.saveContext()
+    }
+
+    private func downloadPhotoAlbum(completionHandler: @escaping () -> Void) {
 
         // PhotoAlbum metadata.
 
@@ -95,8 +107,16 @@ class PhotoAlbumViewController: UIViewController {
                 return
             }
 
-            self.photoAlbum = PhotoAlbum(page: transientPhotoAlbum!.page, pageCount: transientPhotoAlbum!.pageCount,
-                    context: self.persistenceCtrl.coreDataStack.context)
+            if let photoAlbum = self.travelLocation.photoAlbum{
+                self.photoAlbum = photoAlbum
+                self.photoAlbum!.page = Int32(transientPhotoAlbum!.page)
+                self.photoAlbum!.pageCount = Int32(transientPhotoAlbum!.pageCount)
+            }
+            else{
+                self.photoAlbum = PhotoAlbum(page: transientPhotoAlbum!.page, pageCount: transientPhotoAlbum!.pageCount,
+                        context: self.persistenceCtrl.context)
+                self.photoAlbum!.travelLocation = self.travelLocation
+            }
 
             self.transientPhotos = transientPhotos
 
@@ -118,7 +138,8 @@ class PhotoAlbumViewController: UIViewController {
                     }
 
                     let photo = Photo(url: transientPhoto.url, imageData: transientPhoto.imageData!,
-                            context: self.persistenceCtrl.coreDataStack.context)
+                            context: self.persistenceCtrl.context)
+                    photo.photoAlbum = self.photoAlbum
 
                     DispatchQueue.main.async {
                         self.photos.append(photo)
