@@ -45,8 +45,8 @@ class PhotoAlbumViewController: UIViewController {
             }
         }
     }
-    private var isFetchingMetadataInProgress = false
 
+    private var isFetchingMetadataInProgress = false
     private var collectionViewController: PhotoCollectionViewViewController!
 
     // MARK: Life Cycle
@@ -55,7 +55,6 @@ class PhotoAlbumViewController: UIViewController {
         super.viewDidLoad()
 
         self.travelLocation = coreDataStackFacade.fetchTravelLocationAsync(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
-
         initTransientProperties()
 
         self.collectionViewController.delegate = self
@@ -229,7 +228,7 @@ class PhotoAlbumViewController: UIViewController {
     }
 }
 
-// MARK: UI helper methods
+// MARK: UI Helper Methods
 
 extension PhotoAlbumViewController{
 
@@ -268,11 +267,11 @@ extension PhotoAlbumViewController{
     }
 }
 
-// MARK: PhotoCollectionViewViewController delegate
+// MARK: PhotoCollectionViewViewController Delegate
 
 extension PhotoAlbumViewController: PhotoCollectionViewViewControllerDelegate{
 
-    func didRemovePhotoAt(_ indexPath: IndexPath) {
+    func didRemovePhoto(at indexPath: IndexPath) {
         self.transPhotos.remove(at: indexPath.row)
         self.persistChanges()
     }

@@ -7,5 +7,5 @@ import Foundation
 
 protocol PhotoCollectionViewViewControllerDelegate {
 
-    func didRemovePhotoAt(_ indexPath: IndexPath)
+    func didRemovePhoto(at indexPath: IndexPath)
 }

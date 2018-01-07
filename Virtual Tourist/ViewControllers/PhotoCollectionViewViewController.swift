@@ -90,7 +90,7 @@ extension PhotoCollectionViewViewController: UICollectionViewDataSource, UIColle
             self.transPhotos.remove(at: indexPath.row)
             self.collectionView.reloadData()
 
-            delegate?.didRemovePhotoAt(indexPath)
+            delegate?.didRemovePhoto(at: indexPath)
         }
     }
 }
