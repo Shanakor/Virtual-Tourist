@@ -127,7 +127,6 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     // MARK: Network Requests
-    // TODO: Replace print(error) everywhere with UIAlertDialogs.
 
     private func downloadPhotoAlbum(completionHandler: @escaping () -> Void) {
 
@@ -137,7 +136,7 @@ class PhotoAlbumViewController: UIViewController {
             transPhotoAlbum, transPhotos, error in
 
             guard error == nil else{
-                print(error!)
+                self.presentAlertDialog(for: error!)
                 return
             }
 
@@ -160,7 +159,7 @@ class PhotoAlbumViewController: UIViewController {
                     transPhoto, error in
 
                     guard error == nil else{
-                        print(error!)
+                        self.presentAlertDialog(for: error!)
                         return
                     }
 
@@ -176,7 +175,7 @@ class PhotoAlbumViewController: UIViewController {
                     error in
 
                     if error != nil {
-                        print(error!)
+                        self.presentAlertDialog(for: error!)
                     }
 
                     completionHandler()
@@ -231,6 +230,28 @@ extension PhotoAlbumViewController{
         let shouldHideCollectionViewContainerView = (transPhotoAlbum != nil && transPhotos.count == 0)
         collectionViewContainerView.isHidden = shouldHideCollectionViewContainerView
         noImagesContainerView.isHidden = !shouldHideCollectionViewContainerView
+    }
+
+    // MARK: Presenting errors
+
+    fileprivate func presentAlertDialog(for error: FlickrAPIClient.APIClientError) {
+        switch(error){
+        case .connectionError:
+            self.presentAlertDialog(title: ErrorMessageConstants.AlertDialogStrings.ConnectionError.Title, message: ErrorMessageConstants.AlertDialogStrings.ConnectionError.Message)
+        case .parseError:
+            self.presentAlertDialog(title: ErrorMessageConstants.AlertDialogStrings.ParseError.Title, message: ErrorMessageConstants.AlertDialogStrings.ParseError.Message)
+        case .serverError:
+            self.presentAlertDialog(title: ErrorMessageConstants.AlertDialogStrings.CredentialError.Title, message: ErrorMessageConstants.AlertDialogStrings.CredentialError.Message)
+        default:
+            break
+        }
+    }
+
+    fileprivate func presentAlertDialog(title: String, message: String){
+        let alertCtrl = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alertCtrl.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+
+        self.present(alertCtrl, animated: true, completion: nil)
     }
 }
 
