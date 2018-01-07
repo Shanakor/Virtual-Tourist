@@ -32,7 +32,6 @@ class PhotoCollectionViewViewController: UIViewController {
             collectionView.reloadData()
         }
     }
-
     var delegate: PhotoCollectionViewViewControllerDelegate?
 
     // MARK: Lifecycle
@@ -74,8 +73,8 @@ extension PhotoCollectionViewViewController: UICollectionViewDataSource, UIColle
 
         if photo.imageData != nil {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.PhotoCell, for: indexPath) as! PhotoCollectionViewCell
-
             cell.setup(with: photo)
+
             return cell
         }
         else{
