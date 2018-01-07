@@ -38,13 +38,13 @@ struct CoreDataStack {
         // Create the store coordinator
         coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
 
-        // create a context and add connect it to the coordinator
-        mainContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        mainContext.persistentStoreCoordinator = coordinator
-
         // Create a background context, for concurrent saving.
         backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        backgroundContext.parent = mainContext
+        backgroundContext.persistentStoreCoordinator = coordinator
+
+        // create a context and add connect it to the coordinator
+        mainContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        mainContext.parent = backgroundContext
 
         // Add a SQLite store located in the documents folder
         let fm = FileManager.default
@@ -96,7 +96,7 @@ extension CoreDataStack {
     }
 
     func saveBackgroundContext() throws {
-        if mainContext.hasChanges {
+        if backgroundContext.hasChanges {
             try backgroundContext.save()
         }
     }
