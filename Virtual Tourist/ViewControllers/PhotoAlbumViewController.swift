@@ -17,6 +17,7 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var newCollectionButton: UIBarButtonItem!
     @IBOutlet weak var collectionViewContainerView: UIView!
     @IBOutlet weak var noImagesContainerView: UIView!
+    @IBOutlet weak var metadataContainerView: UIView!
     
     // MARK: Constants
 
@@ -38,8 +39,13 @@ class PhotoAlbumViewController: UIViewController {
     private var transPhotos = [TransientPhoto](){
         didSet {
             collectionViewController.transPhotos = transPhotos
+
+            if transPhotos.count == 0{
+                configureContainerViewsVisibility()
+            }
         }
     }
+    private var isFetchingMetadataInProgress = false
 
     private var collectionViewController: PhotoCollectionViewViewController!
 
@@ -51,7 +57,6 @@ class PhotoAlbumViewController: UIViewController {
         self.travelLocation = coreDataStackFacade.fetchTravelLocationAsync(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
 
         initTransientProperties()
-        configureContainerViewLayout()
 
         self.collectionViewController.delegate = self
     }
@@ -73,6 +78,8 @@ class PhotoAlbumViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        configureContainerViewsVisibility()
+
         mapView.addAnnotation(annotation)
         mapView.showAnnotations([annotation], animated: false)
     }
@@ -93,6 +100,8 @@ class PhotoAlbumViewController: UIViewController {
     }
 
     private func startPhotoAlbumDownloadRoutine() {
+        isFetchingMetadataInProgress = true
+        configureContainerViewsVisibility()
         enableUI(false)
 
         downloadPhotoAlbum() {
@@ -117,8 +126,9 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: IBActions
     
     @IBAction func downloadNewPage(_ sender: Any) {
-        transPhotoAlbum.page = transPhotoAlbum.page + 1
+        self.transPhotos = [TransientPhoto]()
 
+        transPhotoAlbum.page = transPhotoAlbum.page + 1
         if transPhotoAlbum.page > transPhotoAlbum.pageCount!{
             transPhotoAlbum.page = 1
         }
@@ -144,8 +154,9 @@ class PhotoAlbumViewController: UIViewController {
             self.transPhotos = transPhotos!
 
             DispatchQueue.main.async{
+                self.isFetchingMetadataInProgress = false
                 // Show image label if no photos were found.
-                self.configureContainerViewLayout()
+                self.configureContainerViewsVisibility()
             }
 
             self.downloadPhotoData(of: transPhotos!, completionHandler: completionHandler)
@@ -226,10 +237,12 @@ extension PhotoAlbumViewController{
         newCollectionButton.isEnabled = enabled
     }
     
-    fileprivate func configureContainerViewLayout() {
+    fileprivate func configureContainerViewsVisibility() {
+        metadataContainerView.isHidden = !isFetchingMetadataInProgress
+
         let shouldHideCollectionViewContainerView = (transPhotoAlbum != nil && transPhotos.count == 0)
         collectionViewContainerView.isHidden = shouldHideCollectionViewContainerView
-        noImagesContainerView.isHidden = !shouldHideCollectionViewContainerView
+        noImagesContainerView.isHidden = (isFetchingMetadataInProgress || !shouldHideCollectionViewContainerView)
     }
 
     // MARK: Presenting errors
