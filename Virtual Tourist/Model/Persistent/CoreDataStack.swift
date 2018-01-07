@@ -13,7 +13,8 @@ struct CoreDataStack {
     internal let coordinator: NSPersistentStoreCoordinator
     private let modelURL: URL
     internal let dbURL: URL
-    let context: NSManagedObjectContext
+    let mainContext: NSManagedObjectContext
+    let backgroundContext: NSManagedObjectContext
 
     // MARK: Initializers
 
@@ -38,8 +39,12 @@ struct CoreDataStack {
         coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
 
         // create a context and add connect it to the coordinator
-        context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        context.persistentStoreCoordinator = coordinator
+        mainContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        mainContext.persistentStoreCoordinator = coordinator
+
+        // Create a background context, for concurrent saving.
+        backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.parent = mainContext
 
         // Add a SQLite store located in the documents folder
         let fm = FileManager.default
@@ -84,28 +89,29 @@ internal extension CoreDataStack  {
 
 extension CoreDataStack {
 
-    func saveContext() throws {
-        if context.hasChanges {
-            try context.save()
+    func saveMainContext() throws {
+        if mainContext.hasChanges {
+            try mainContext.save()
         }
     }
 
-    func startAutoSaving(_ delayInSeconds : Int) {
+    func saveBackgroundContext() throws {
+        if mainContext.hasChanges {
+            try backgroundContext.save()
+        }
+    }
+}
 
-        if delayInSeconds > 0 {
-            do {
-                try saveContext()
-                print("Autosaving")
-            } catch {
-                print("Error while autosaving")
-            }
+// MARK: - CoreDataStack (Batch Processing in the Background)
 
-            let delayInNanoSeconds = UInt64(delayInSeconds) * NSEC_PER_SEC
-            let time = DispatchTime.now() + Double(Int64(delayInNanoSeconds)) / Double(NSEC_PER_SEC)
+extension CoreDataStack {
 
-            DispatchQueue.main.asyncAfter(deadline: time) {
-                self.startAutoSaving(delayInSeconds)
-            }
+    typealias Batch = (_ workerContext: NSManagedObjectContext) -> ()
+
+    func performBackgroundBatchOperation(_ batch: @escaping Batch) {
+
+        backgroundContext.perform() {
+            batch(self.backgroundContext)
         }
     }
 }

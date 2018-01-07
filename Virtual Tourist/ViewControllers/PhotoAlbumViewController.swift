@@ -48,7 +48,7 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.travelLocation = persistenceCtrl.fetchTravelLocation(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
+        self.travelLocation = persistenceCtrl.fetchTravelLocationAsync(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
 
         initTransientProperties()
         configureContainerViewLayout()
@@ -186,22 +186,26 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: Persistence
 
     private func persistChanges() {
-        if let photoAlbum = travelLocation.photoAlbum{
-            // Due to delete rule cascade, all photos get deleted also.
-            persistenceCtrl.context.delete(photoAlbum)
+        persistenceCtrl.performBackgroundBatchOperation{
+            context in
+
+            if let photoAlbum = self.travelLocation.photoAlbum{
+                // Due to delete rule cascade, all photos get deleted also.
+                context.delete(photoAlbum)
+            }
+
+            let photoAlbum = TransientPersistentConversionBridge.toPhotoAlbum(self.transPhotoAlbum, context: context)
+            photoAlbum.travelLocation = self.travelLocation
+
+            var photos = [Photo]()
+            for transPhoto in self.transPhotos{
+                let photo = TransientPersistentConversionBridge.toPhoto(transPhoto, context: context)
+                photo.photoAlbum = photoAlbum
+                photos.append(photo)
+            }
+
+            self.persistenceCtrl.saveBackgroundContext()
         }
-
-        let photoAlbum = TransientPersistentConversionBridge.toPhotoAlbum(transPhotoAlbum, context: persistenceCtrl.context)
-        photoAlbum.travelLocation = travelLocation
-
-        var photos = [Photo]()
-        for transPhoto in transPhotos{
-            let photo = TransientPersistentConversionBridge.toPhoto(transPhoto, context: persistenceCtrl.context)
-            photo.photoAlbum = photoAlbum
-            photos.append(photo)
-        }
-
-        persistenceCtrl.saveContext()
     }
     
     // Navigation

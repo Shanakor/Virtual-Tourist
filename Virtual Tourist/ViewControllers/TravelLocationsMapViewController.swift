@@ -34,7 +34,7 @@ class TravelLocationsMapViewController: UIViewController {
         let gestureRecognizer = initLongPressGestureRecognizer()
         mapView.addGestureRecognizer(gestureRecognizer)
 
-        let travelLocations = persistenceCtrl.fetchAllTravelLocations()
+        let travelLocations = persistenceCtrl.fetchAllTravelLocationsAsync()
         let annotations = TravelLocation.convertArrayToMKPointAnnotations(travelLocations)
         mapView.addAnnotations(annotations)
     }
@@ -110,8 +110,12 @@ class TravelLocationsMapViewController: UIViewController {
     }
 
     private func persistTravelLocation(coordinate: CLLocationCoordinate2D) {
-        let _ = TravelLocation(latitude: coordinate.latitude, longitude: coordinate.longitude, context: persistenceCtrl.context)
-        persistenceCtrl.saveContext()
+        persistenceCtrl.performBackgroundBatchOperation{
+            context in
+
+            let _ = TravelLocation(latitude: coordinate.latitude, longitude: coordinate.longitude, context: context)
+            self.persistenceCtrl.saveBackgroundContext()
+        }
     }
 
     private func addPointAnnotationToMapViewAt(coordinate: CLLocationCoordinate2D) {

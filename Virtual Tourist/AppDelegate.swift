@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 
         do {
-            try coreDataStack.saveContext()
+            try coreDataStack.saveMainContext()
         } catch {
             print("Error while saving.")
         }
@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         do {
-            try coreDataStack.saveContext()
+            try coreDataStack.saveMainContext()
         } catch {
             print("Error while saving.")
         }
