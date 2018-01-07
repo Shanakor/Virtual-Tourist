@@ -25,18 +25,17 @@ class TravelLocationsMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        initMapView()
+        configureMapView()
     }
 
-    private func initMapView() {
+    private func configureMapView() {
         mapView.delegate = self
 
         let gestureRecognizer = initLongPressGestureRecognizer()
         mapView.addGestureRecognizer(gestureRecognizer)
 
         let travelLocations = coreDataStackFacade.fetchAllTravelLocationsAsync()
-        let annotations = TravelLocation.convertArrayToMKPointAnnotations(travelLocations)
-        mapView.addAnnotations(annotations)
+        mapView.addAnnotations(TravelLocation.convertArrayToMKPointAnnotations(travelLocations))
     }
 
     private func initLongPressGestureRecognizer() -> UILongPressGestureRecognizer {
@@ -49,13 +48,13 @@ class TravelLocationsMapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        restoreMapRegion()
+        restoreMapRegionFromUserDefaults()
 
         // Hide navigation bar on first UIViewController.
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
-    private func restoreMapRegion() {
+    private func restoreMapRegionFromUserDefaults() {
         if let centerLatitude = UserDefaults.standard.object(forKey: AppDelegate.UserDefaultsConstants.MapRegion.CenterLatitude),
            let centerLongitude = UserDefaults.standard.object(forKey: AppDelegate.UserDefaultsConstants.MapRegion.CenterLongitude),
            let spanLatitudeDelta = UserDefaults.standard.object(forKey: AppDelegate.UserDefaultsConstants.MapRegion.SpanLatitudeDelta),
@@ -149,7 +148,8 @@ class TravelLocationsMapViewController: UIViewController {
     }
 }
 
-// MARK: MKMapView delegate
+// MARK: MKMapView Delegate
+
 extension TravelLocationsMapViewController: MKMapViewDelegate{
 
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
