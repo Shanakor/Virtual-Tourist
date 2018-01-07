@@ -31,7 +31,7 @@ class PhotoAlbumViewController: UIViewController {
     var annotation: MKAnnotation!
     var travelLocation: TravelLocation!
 
-    let persistenceCtrl = PersistenceController.shared
+    private let coreDataStackFacade = CoreDataStackFacade.shared
 
     private var transTravelLocation: TransientTravelLocation!
     private var transPhotoAlbum: TransientPhotoAlbum!
@@ -48,7 +48,7 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.travelLocation = persistenceCtrl.fetchTravelLocationAsync(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
+        self.travelLocation = coreDataStackFacade.fetchTravelLocationAsync(lat: annotation.coordinate.latitude, lon: annotation.coordinate.longitude)
 
         initTransientProperties()
         configureContainerViewLayout()
@@ -186,7 +186,7 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: Persistence
 
     private func persistChanges() {
-        persistenceCtrl.performBackgroundBatchOperation{
+        coreDataStackFacade.performBackgroundBatchOperation{
             context in
 
             if let photoAlbum = self.travelLocation.photoAlbum{
@@ -204,7 +204,7 @@ class PhotoAlbumViewController: UIViewController {
                 photos.append(photo)
             }
 
-            self.persistenceCtrl.saveBackgroundContext()
+            self.coreDataStackFacade.saveBackgroundContext()
         }
     }
     

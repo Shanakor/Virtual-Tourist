@@ -6,11 +6,11 @@
 import UIKit
 import CoreData
 
-class PersistenceController {
+class CoreDataStackFacade {
 
     // MARK: Properties
 
-    static let shared = PersistenceController()
+    static let shared = CoreDataStackFacade()
 
     private let coreDataStack = (UIApplication.shared.delegate as! AppDelegate).coreDataStack
 
@@ -49,7 +49,7 @@ class PersistenceController {
 
 // MARK: TravelLocation Convenience Methods
 
-extension PersistenceController{
+extension CoreDataStackFacade {
 
     func fetchAllTravelLocationsAsync() -> [TravelLocation]{
         let fr = NSFetchRequest<TravelLocation>(entityName: TravelLocation.entityName)
