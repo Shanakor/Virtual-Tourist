@@ -81,11 +81,11 @@ class PhotoAlbumViewController: UIViewController {
         super.viewDidAppear(animated)
 
         if self.transPhotoAlbum == nil {
-            configureUI(enabled: false)
+            enableUI(false)
 
             downloadPhotoAlbum() {
                 DispatchQueue.main.async {
-                    self.configureUI(enabled: true)
+                    self.enableUI(true)
                     self.persistChanges()
                 }
             }
@@ -101,10 +101,10 @@ class PhotoAlbumViewController: UIViewController {
             transPhotoAlbum.page = 1
         }
 
-        configureUI(enabled: false)
+        enableUI(false)
         downloadPhotoAlbum(){
             DispatchQueue.main.async {
-                self.configureUI(enabled: true)
+                self.enableUI(true)
                 self.persistChanges()
             }
         }
@@ -200,7 +200,7 @@ class PhotoAlbumViewController: UIViewController {
 
 extension PhotoAlbumViewController{
 
-    fileprivate func configureUI(enabled: Bool){
+    fileprivate func enableUI(_ enabled: Bool){
         newCollectionButton.isEnabled = enabled
     }
     
