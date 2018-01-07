@@ -81,7 +81,7 @@ class FlickrAPIClient: APIClient {
             }
 
             var photoAlbum: TransientPhotoAlbum!
-            self.parsePhotoAlbumMetadata(photosDictionary){
+            self.parsePhotoAlbumMetadata(from: photosDictionary){
                 album, error in
 
                 guard error == nil else{
@@ -93,7 +93,7 @@ class FlickrAPIClient: APIClient {
             }
 
             var photos: [TransientPhoto]!
-            self.parsePhotoMetadata(photosDictionary){
+            self.parsePhotoMetadata(from: photosDictionary){
                 photosResult, error in
 
                 guard error == nil else{
@@ -108,7 +108,7 @@ class FlickrAPIClient: APIClient {
         }
     }
 
-    private func parsePhotoMetadata(_ photosDictionary: [String: AnyObject], completionHandler: ([TransientPhoto]?, APIClientError?) -> Void){
+    private func parsePhotoMetadata(from photosDictionary: [String: AnyObject], completionHandler: ([TransientPhoto]?, APIClientError?) -> Void){
         var photos = [TransientPhoto]()
 
         guard let photoArray = photosDictionary[ResponseKeys.Photo] as? [[String: AnyObject]] else{
@@ -118,7 +118,7 @@ class FlickrAPIClient: APIClient {
 
         for (i, photoMetadata) in photoArray.enumerated(){
             guard let url = photoMetadata[ResponseKeys.MediumURL] as? String else{
-                completionHandler(nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.MediumURL)' in \(photoMetadata) at index \(i)"))
+                completionHandler(nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.MediumURL)' in \(photoMetadata) at index \(i) of \(photoArray)"))
                 return
             }
 
@@ -128,7 +128,7 @@ class FlickrAPIClient: APIClient {
         completionHandler(photos, nil)
     }
 
-    private func parsePhotoAlbumMetadata(_ photosDictionary: [String: AnyObject], completionHandler: (TransientPhotoAlbum?, APIClientError?) -> Void){
+    private func parsePhotoAlbumMetadata(from photosDictionary: [String: AnyObject], completionHandler: (TransientPhotoAlbum?, APIClientError?) -> Void){
         guard let page = photosDictionary[ResponseKeys.Page] else{
             completionHandler(nil, APIClientError.parseError(description: "Could not find key '\(ResponseKeys.Page)' in \(photosDictionary)"))
             return
@@ -153,17 +153,17 @@ class FlickrAPIClient: APIClient {
     }
 
     private func createBBoxString(lat: Double, lon: Double) -> String {
-        let validatedMinLon = validate(lon - Constants.SearchBBoxHalfWidth, cyclicRange: Constants.SearchLonRange)
-        let validatedMinLat = validate(lat - Constants.SearchBBoxHalfHeight, cyclicRange: Constants.SearchLatRange)
-        let validatedMaxLon = validate(lon + Constants.SearchBBoxHalfWidth, cyclicRange: Constants.SearchLonRange)
-        let validatedMaxLat = validate(lat + Constants.SearchBBoxHalfHeight, cyclicRange: Constants.SearchLatRange)
+        let validatedMinLon = validate(number: lon - Constants.SearchBBoxHalfWidth, inside: Constants.SearchLonRange)
+        let validatedMinLat = validate(number: lat - Constants.SearchBBoxHalfHeight, inside: Constants.SearchLatRange)
+        let validatedMaxLon = validate(number: lon + Constants.SearchBBoxHalfWidth, inside: Constants.SearchLonRange)
+        let validatedMaxLat = validate(number: lat + Constants.SearchBBoxHalfHeight, inside: Constants.SearchLatRange)
 
         let bboxArray: [String] = [String(validatedMinLon), String(validatedMinLat), String(validatedMaxLon), String(validatedMaxLat)]
 
         return bboxArray.joined(separator: ",")
     }
 
-    private func validate(_ number: Double, cyclicRange: (Double, Double)) -> Double {
+    private func validate(number: Double, inside cyclicRange: (Double, Double)) -> Double {
         if number < cyclicRange.0{
             return cyclicRange.1 - (abs(max(number, cyclicRange.0)) - abs(min(number, cyclicRange.0)))
         }

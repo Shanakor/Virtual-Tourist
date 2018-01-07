@@ -170,7 +170,7 @@ class PhotoAlbumViewController: UIViewController {
                     transPhoto, error in
 
                     guard error == nil else{
-                        self.presentAlertDialog(for: error!)
+                        print(error!)
                         return
                     }
 
