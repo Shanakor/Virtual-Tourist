@@ -80,14 +80,36 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if self.transPhotoAlbum == nil {
-            enableUI(false)
+        if self.transPhotoAlbum == nil{
+            startPhotoAlbumDownloadRoutine()
+        }
+        else{
+            let emptyTransPhotos = transPhotos.filter({$0.imageData == nil})
 
-            downloadPhotoAlbum() {
-                DispatchQueue.main.async {
-                    self.enableUI(true)
-                    self.persistChanges()
-                }
+            if emptyTransPhotos.count > 0{
+                startPhotoDownloadRoutine(photos: emptyTransPhotos)
+            }
+        }
+    }
+
+    private func startPhotoAlbumDownloadRoutine() {
+        enableUI(false)
+
+        downloadPhotoAlbum() {
+            DispatchQueue.main.async {
+                self.enableUI(true)
+                self.persistChanges()
+            }
+        }
+    }
+
+    private func startPhotoDownloadRoutine(photos: [TransientPhoto]){
+        enableUI(false)
+
+        downloadPhotoData(of: photos){
+            DispatchQueue.main.async {
+                self.enableUI(true)
+                self.persistChanges()
             }
         }
     }
@@ -101,13 +123,7 @@ class PhotoAlbumViewController: UIViewController {
             transPhotoAlbum.page = 1
         }
 
-        enableUI(false)
-        downloadPhotoAlbum(){
-            DispatchQueue.main.async {
-                self.enableUI(true)
-                self.persistChanges()
-            }
-        }
+        startPhotoAlbumDownloadRoutine()
     }
     
     // MARK: Network Requests
@@ -133,11 +149,11 @@ class PhotoAlbumViewController: UIViewController {
                 self.configureContainerViewLayout()
             }
 
-            self.loadPhotoData(of: transPhotos!, completionHandler: completionHandler)
+            self.downloadPhotoData(of: transPhotos!, completionHandler: completionHandler)
         }
     }
 
-    private func loadPhotoData(of transientPhotos: [TransientPhoto], completionHandler: @escaping () -> Void) {
+    private func downloadPhotoData(of transientPhotos: [TransientPhoto], completionHandler: @escaping () -> Void) {
 
         FlickrAPIClient.shared.downloadPhotoData(of: transientPhotos,
                 progressHandler: {
@@ -153,6 +169,8 @@ class PhotoAlbumViewController: UIViewController {
                         self.transPhotos.remove(at: idx!)
                         self.transPhotos.insert(transPhoto, at: idx!)
                     }
+
+                    self.persistChanges()
                 },
                 completionHandler: {
                     error in
@@ -187,6 +205,7 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     // Navigation
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let identifier = segue.identifier{
             if identifier == Identifiers.Segues.EmbedCollectionViewController{
