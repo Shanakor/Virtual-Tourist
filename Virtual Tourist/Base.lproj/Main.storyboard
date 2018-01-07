@@ -111,6 +111,11 @@
                                     <constraint firstAttribute="trailing" secondItem="1lv-Uq-CW8" secondAttribute="trailing" id="xg2-0C-b59"/>
                                     <constraint firstAttribute="trailing" secondItem="ZrK-3P-j8Y" secondAttribute="trailing" id="xwi-fi-okk"/>
                                 </constraints>
+                                <variation key="heightClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="VCY-CT-130"/>
+                                    </mask>
+                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -120,10 +125,21 @@
                             <constraint firstItem="5br-f3-ZU2" firstAttribute="leading" secondItem="iNf-IA-hNU" secondAttribute="leading" id="GQ2-ix-MfS"/>
                             <constraint firstItem="iNf-IA-hNU" firstAttribute="trailing" secondItem="5br-f3-ZU2" secondAttribute="trailing" id="HHU-KW-5GX"/>
                             <constraint firstItem="cEr-6z-8WF" firstAttribute="leading" secondItem="iNf-IA-hNU" secondAttribute="leading" id="L5X-HE-KfL"/>
+                            <constraint firstItem="3i6-L1-a33" firstAttribute="height" secondItem="iNf-IA-hNU" secondAttribute="height" multiplier="0.35" id="di0-F7-cdZ"/>
                             <constraint firstItem="5br-f3-ZU2" firstAttribute="top" secondItem="iNf-IA-hNU" secondAttribute="top" id="gSc-YH-X1u"/>
                             <constraint firstItem="cEr-6z-8WF" firstAttribute="top" secondItem="5br-f3-ZU2" secondAttribute="bottom" id="lpw-JH-Nss"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iNf-IA-hNU"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="di0-F7-cdZ"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="di0-F7-cdZ"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="7Dh-xU-e5u"/>
                     <connections>
@@ -246,7 +262,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Images!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eRB-3t-cOm">
-                                <rect key="frame" x="143.5" y="199" width="87" height="21"/>
+                                <rect key="frame" x="144" y="199" width="87" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -292,6 +308,7 @@
                             <constraint firstItem="cct-ot-5gT" firstAttribute="centerY" secondItem="W4P-aY-P4J" secondAttribute="centerY" id="0TN-Cx-cNi"/>
                             <constraint firstItem="cct-ot-5gT" firstAttribute="centerX" secondItem="W4P-aY-P4J" secondAttribute="centerX" id="gj5-Sp-HBn"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="MfS-kV-NrR"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a1J-5E-U0U" userLabel="First Responder" sceneMemberID="firstResponder"/>

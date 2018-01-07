@@ -29,7 +29,9 @@ class PhotoCollectionViewViewController: UIViewController {
 
     var transPhotos = [TransientPhoto](){
         didSet{
-            collectionView.reloadData()
+            DispatchQueue.main.async{
+                self.collectionView.reloadData()
+            }
         }
     }
     var delegate: PhotoCollectionViewViewControllerDelegate?
